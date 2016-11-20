@@ -56,9 +56,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Controller\JewelryController.cs" />
+    <Compile Include="JewelrySystemDataSet.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>JewelrySystemDataSet.xsd</DependentUpon>
+    </Compile>
     <Compile Include="Model\DataAccess.cs" />
+    <Compile Include="Model\Invoice.cs" />
     <Compile Include="Model\JewelryAccess.cs" />
-    <Compile Include="Model\JewelryItem.cs" />
+    <Compile Include="Model\Item.cs" />
     <Compile Include="View\DefWindow.xaml.cs">
       <DependentUpon>DefWindow.xaml</DependentUpon>
     </Compile>
@@ -104,6 +110,17 @@
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
+    <None Include="JewelrySystemDataSet.xsc">
+      <DependentUpon>JewelrySystemDataSet.xsd</DependentUpon>
+    </None>
+    <None Include="JewelrySystemDataSet.xsd">
+      <Generator>MSDataSetGenerator</Generator>
+      <LastGenOutput>JewelrySystemDataSet.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </None>
+    <None Include="JewelrySystemDataSet.xss">
+      <DependentUpon>JewelrySystemDataSet.xsd</DependentUpon>
+    </None>
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
@@ -112,6 +129,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="JewelrySystem.mdb">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

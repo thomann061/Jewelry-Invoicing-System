@@ -5,8 +5,123 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JewelryInvoicingSystem"
         mc:Ignorable="d"
-        Title="DefWindow" Height="300" Width="300">
+    Title="Inventory" Height="612.149" Width="618.73" WindowStartupLocation="CenterScreen">
+
     <Grid>
+        <DataGrid x:Name="dtaGrdInventory" 
+                  HorizontalAlignment="Left" 
+                  Margin="54,274,0,0" 
+                  VerticalAlignment="Top" 
+                  Height="219" 
+                  Width="510"/>
+
+        <Button x:Name="btnClose" 
+                Content="Close" 
+                HorizontalAlignment="Left" 
+                Margin="312,515,0,0" 
+                VerticalAlignment="Top" 
+                Width="104" 
+                Height="35" 
+                IsEnabled="False"
+                Click="btnClose_Click"/>
+
+        <Button x:Name="btnSave" 
+                Content="Save" 
+                HorizontalAlignment="Left" 
+                Margin="445,515,0,0" 
+                VerticalAlignment="Top" 
+                Width="103" 
+                Height="35"
+                IsEnabled="False" Click="btnSave_Click"/>
+
+        <Button x:Name="btnAddNew" 
+                Content="Add New Item" 
+                HorizontalAlignment="Left" 
+                Margin="54,47,0,0" 
+                VerticalAlignment="Top" 
+                Width="120" 
+                Height="34" Click="btnAddNew_Click"/>
+
+        <Button x:Name="btnEdit" 
+                Content="Edit Existing Item" 
+                HorizontalAlignment="Left" 
+                Margin="54,104,0,0" 
+                VerticalAlignment="Top" 
+                Width="120" 
+                Height="34" Click="btnEdit_Click"/>
+
+        <Button x:Name="btnDelete" 
+                Content="Delete Item" 
+                HorizontalAlignment="Left" 
+                Margin="54,159,0,0" 
+                VerticalAlignment="Top" 
+                Width="120" 
+                Height="34"/>
+
+        <Label x:Name="lblName" 
+               Content="Item Name:" 
+               HorizontalAlignment="Left" 
+               Margin="291,43,0,0" 
+               VerticalAlignment="Top"/>
+
+        <Label x:Name="lblCost" 
+               Content="Item Cost:" 
+               HorizontalAlignment="Left" 
+               Margin="291,85,0,0" 
+               VerticalAlignment="Top"/>
+
+        <Label x:Name="lblDescrip" 
+               Content="Item Description:" 
+               HorizontalAlignment="Left" 
+               Margin="291,129,0,0" 
+               VerticalAlignment="Top"/>
+
+        <TextBox x:Name="txtName" 
+                 HorizontalAlignment="Left" 
+                 Height="23" 
+                 Margin="383,46,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="" 
+                 VerticalAlignment="Top" 
+                 Width="120"
+                 IsEnabled="False"/>
+
+        <TextBox x:Name="txtCost" 
+                 HorizontalAlignment="Left" 
+                 Height="23" 
+                 Margin="383,85,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="" 
+                 VerticalAlignment="Top" 
+                 Width="120"
+                 IsEnabled="False"/>
+
+        <Button x:Name="btnCancel" 
+                Content="Cancel" 
+                HorizontalAlignment="Left" 
+                Margin="54,515,0,0" 
+                VerticalAlignment="Top" 
+                Width="104" 
+                Height="35" Click="btnCancel_Click"/>
+
+        <Button x:Name="btnClear" 
+                Content="Clear" 
+                HorizontalAlignment="Left" 
+                Margin="464,228,0,0" 
+                VerticalAlignment="Top" 
+                Width="100" 
+                Height="30"
+                IsEnabled="False" Click="btnClear_Click"/>
         
+        <TextBox x:Name="txtItemDescription" 
+                 HorizontalAlignment="Left" 
+                 Height="64" 
+                 Margin="312,159,0,0" 
+                 TextWrapping="Wrap" 
+                 Text="" 
+                 VerticalAlignment="Top" 
+                 Width="252"
+                 IsEnabled="False"/>
+
     </Grid>
 </Window>

@@ -17,7 +17,7 @@ public class DataAccess {
     /// Constructor that sets the connection string to the database
     /// </summary>
     public DataAccess() {
-        sConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data source= " + Directory.GetCurrentDirectory() + "\\ReservationSystem.mdb";
+        sConnectionString = @"Provider=Microsoft.Jet.OLEDB.4.0;Data source= " + Directory.GetCurrentDirectory() + "\\JewelrySystem.mdb";
     }
 
     /// <summary>
