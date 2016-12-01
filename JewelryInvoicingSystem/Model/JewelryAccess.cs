@@ -371,7 +371,7 @@ namespace JewelryInvoicingSystem.Model {
 
                 //insert items
                 foreach (InvoiceItem el in invoiceItems) {
-                    s2SQL = "INSERT INTO InvoiceItem (ItemCode, InvoiceCode, ItemPrice)" +
+                    s2SQL = "INSERT INTO InvoiceItem (ItemCode, InvoiceCode, ItemCost)" +
                             "VALUES(" + el.Item.ItemCode + ", " + invoice.InvoiceCode + ", " + el.ItemCost + ");";
                     rowCount = db.ExecuteNonQuery(s2SQL);
                     //if insert unsuccessful
