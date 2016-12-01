@@ -353,6 +353,7 @@ namespace JewelryInvoicingSystem {
                             Items[i] = selectedItem;
                     }
                     ja.updateItem(selectedItem); //update in database
+                    selectedItem = null;
                 } else if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
                 {
 
@@ -365,9 +366,11 @@ namespace JewelryInvoicingSystem {
                     newItem.ItemDesc = txtItemDescription.Text.ToString();
                     newItem.ItemCost = int.Parse(txtCost.Text.ToString());
 
-
+                    bool result = ja.insertItem(newItem);
+                    if(result)
+                        Items.Add(newItem);
                     //set the InvoiceItem to an observable array
-                    Items.Add(newItem);
+
                     //data bind it
                     //dtaGrdInventory.ItemsSource = Items;
 
