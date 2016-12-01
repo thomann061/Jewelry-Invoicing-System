@@ -92,6 +92,7 @@ namespace JewelryInvoicingSystem {
                 }
                 //enable data fields for use
                 btnAddItem.IsEnabled = true;
+                btnDeleteitem.IsEnabled = true;
                 btnNewInvoice.IsEnabled = false;
                 dtePck.IsEnabled = true;
                 btnCancel.IsEnabled = true;
@@ -348,6 +349,11 @@ namespace JewelryInvoicingSystem {
         private void itemSelected(object sender, SelectionChangedEventArgs e) {
             Item selectedItem = (Item)cbxItem.SelectedItem;
             txtTotalCostCount.Text = selectedItem.ItemCost.ToString();
+        }
+
+        private void btnDeleteItm_Click(object sender, RoutedEventArgs e) {
+            InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
+            InvoiceItems.Remove(selectedItem);
         }
     }//end Main Window
 }

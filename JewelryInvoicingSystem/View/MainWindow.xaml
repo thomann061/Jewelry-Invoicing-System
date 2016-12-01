@@ -197,6 +197,14 @@
             <MenuItem Header="Search Invoices" Click="btnSearchInvoice_Click"/>
             
         </Menu>
+        <Button x:Name="btnDeleteitem" 
+            Content="Delete Item" Style="{StaticResource grayButtons}" 
+            HorizontalAlignment="Left" 
+            Margin="467,261,0,0" 
+            VerticalAlignment="Top" 
+            Width="111" 
+            Height="27" 
+            IsEnabled="False" Click="btnDeleteItm_Click"/>
 
     </Grid>
 </Window>
