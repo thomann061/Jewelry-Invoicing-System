@@ -18,14 +18,14 @@
                   Margin="267,63,0,0" 
                   VerticalAlignment="Top" 
                   Width="204" 
-                  Height="23"/>
+                  Height="23" SelectionChanged="cbxSelectionChanged"/>
         
         <ComboBox x:Name="cbxCriteria3" 
                   HorizontalAlignment="Left" 
                   Margin="267,158,0,0" 
                   VerticalAlignment="Top" 
                   Width="204" 
-                  Height="23"/>
+                  Height="23" SelectionChanged="totalCostChanged"/>
         
         <DataGrid x:Name="dtaGrdsInvoices" 
                   HorizontalAlignment="Left" 
@@ -50,11 +50,11 @@
                 Width="103" 
                 Height="31" Click="btnSelectInvoice_Click" />
         
-        <DatePicker HorizontalAlignment="Left" 
+        <DatePicker x:Name="datePicker" HorizontalAlignment="Left" 
                     Margin="267,109,0,0" 
                     VerticalAlignment="Top" 
                     Width="204" 
-                    Height="25"/>
+                    Height="25" SelectedDateChanged="dateWasChanged"/>
         
         <Label x:Name="lblInvoiceNum" 
                Content="Invoice #:" 

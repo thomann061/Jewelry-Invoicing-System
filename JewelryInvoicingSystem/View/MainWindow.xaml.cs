@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -25,14 +26,23 @@ namespace JewelryInvoicingSystem {
         private ObservableCollection<Invoice> _invoices;
         private ObservableCollection<InvoiceItem> _invoiceItems;
         private JewelryAccess ja;
+        
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName) {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
 
         public MainWindow()
         {
-            InitializeComponent();
+            this.DataContext = this;
             ja = new JewelryAccess();
             Items = new ObservableCollection<Item>();
             Invoices = new ObservableCollection<Invoice>();
             InvoiceItems = new ObservableCollection<InvoiceItem>();
+            InitializeComponent();
             populateItemsComboBox();
         }
 
@@ -48,7 +58,12 @@ namespace JewelryInvoicingSystem {
 
         public ObservableCollection<InvoiceItem> InvoiceItems {
             get { return _invoiceItems; }
-            set { _invoiceItems = value; }
+            set {
+                if (value != _invoiceItems) {
+                    _invoiceItems = value;
+                    OnPropertyChanged("InvoiceItems");
+                }
+            }
         }
 
         private void populateItemsComboBox() {
@@ -78,6 +93,7 @@ namespace JewelryInvoicingSystem {
                 txtTotalCostCount.IsEnabled = true;
                 btnSearchInvoice.IsEnabled = false;
                 btnInventory.IsEnabled = false;
+                dataGrid.IsEnabled = true;
 
                 //create a new invoice
                 Invoice newInvoice = new Invoice();
@@ -92,6 +108,8 @@ namespace JewelryInvoicingSystem {
                 b.Mode = BindingMode.TwoWay;
                 b.Source = newInvoice;
                 lblInvoice.SetBinding(Label.ContentProperty, b);
+                //unset ReadOnly from datagrid
+                dataGrid.IsReadOnly = false;
             }
 
             catch
@@ -120,7 +138,7 @@ namespace JewelryInvoicingSystem {
                 //set the InvoiceItem to an observable array
                 InvoiceItems.Add(newInvoiceItem);
                 //data bind it
-                dataGrid.ItemsSource = InvoiceItems;
+                //dataGrid.ItemsSource = InvoiceItems;
             }
             catch
             {
@@ -139,8 +157,33 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                SearchWindow srchWin = new SearchWindow();
+                SearchWindow srchWin = new SearchWindow(this);
                 srchWin.ShowDialog();
+                //if the invoice is not null, set it to the current invoice
+                if(srchWin.ReturnInvoice != null) {
+                    Invoices.Clear();
+                    Invoices.Add(srchWin.ReturnInvoice);
+                    //data bind the InvoiceCode
+                    Binding b = new Binding("InvoiceCode");
+                    b.Mode = BindingMode.TwoWay;
+                    b.Source = srchWin.ReturnInvoice;
+                    lblInvoice.SetBinding(Label.ContentProperty, b);
+                    //data bind the InvoiceDate
+                    Binding b2 = new Binding("InvoiceDate");
+                    b2.Mode = BindingMode.TwoWay;
+                    b2.Source = srchWin.ReturnInvoice;
+                    dtePck.SetBinding(DatePicker.TextProperty, b2);
+                    //data bind the InvoiceItems
+                    InvoiceItems.Clear();
+                    foreach(InvoiceItem el in ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode)) {
+                        InvoiceItems.Add(el);
+                    }
+                    //set to ReadOnly
+                    dataGrid.IsReadOnly = true;
+                    //enable edit and delete
+                    btnDeleteInvoice.IsEnabled = true;
+                    btnEditInvoice.IsEnabled = true;
+                }
             }
             catch
             {
@@ -205,6 +248,7 @@ namespace JewelryInvoicingSystem {
                         txtTotalCostCount.IsEnabled = false;
                         btnSearchInvoice.IsEnabled = true;
                         btnInventory.IsEnabled = true;
+                        dataGrid.IsEnabled = false;
                     }
                 }
             }
@@ -268,12 +312,23 @@ namespace JewelryInvoicingSystem {
             btnNewInvoice.IsEnabled = false;
             dtePck.IsEnabled = true;
             btnCancel.IsEnabled = true;
-            btnDeleteInvoice.IsEnabled = false;
-            btnEditInvoice.IsEnabled = false;
             btnSave.IsEnabled = true;
             txtTotalCostCount.IsEnabled = true;
             btnSearchInvoice.IsEnabled = true;
             btnInventory.IsEnabled = true;
+            dataGrid.IsEnabled = true;
+            btnEditInvoice.IsEnabled = true;
+        }
+
+        private void btnDeleteInvoice_Click(object sender, RoutedEventArgs e) {
+            //delete an invoice
+            bool result = ja.deleteInvoice(Invoices);
+            if(result) {
+                Invoices.Clear();
+                //enable data fields for use
+                btnEditInvoice.IsEnabled = false;
+                btnDeleteInvoice.IsEnabled = false;
+            }
         }
     }//end Main Window
 }

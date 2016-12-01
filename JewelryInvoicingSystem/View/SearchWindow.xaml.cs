@@ -1,5 +1,7 @@
-﻿using System;
+﻿using JewelryInvoicingSystem.Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -17,12 +19,33 @@ namespace JewelryInvoicingSystem {
     /// Interaction logic for SearchWindow.xaml
     /// </summary>
     public partial class SearchWindow : Window {
-        public SearchWindow()
+        private MainWindow mainWindow;
+        private JewelryAccess ja;
+        private ObservableCollection<Invoice> _invoices;
+        private Invoice _returnInvoice;
+
+        public Invoice ReturnInvoice {
+            get { return _returnInvoice; }
+            set { _returnInvoice = value; }
+        }
+
+        public SearchWindow(MainWindow mainWindow)
         {
             InitializeComponent();
-
+            this.mainWindow = mainWindow;
             //No data will be passed into the window here since the user only wishes to search invoices for now. 
             //Later, we wil pass what data the user wants back to the main window 
+            //load in all invoices to the combobox
+            ja = new JewelryAccess();
+            //select all invoices
+            ObservableCollection<Invoice> initialInvoices = ja.selectInvoices();
+            //data bind two combo boxes
+            cbxCriteria1.ItemsSource = initialInvoices;
+            cbxCriteria3.ItemsSource = initialInvoices;
+            cbxCriteria3.DisplayMemberPath = "InvoiceTotal"; //set the InvoiceTotal to display
+            //data bind the main search screen with all invoices and set it to read only
+            dtaGrdsInvoices.ItemsSource = initialInvoices;
+            dtaGrdsInvoices.IsReadOnly = true;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -57,12 +80,42 @@ namespace JewelryInvoicingSystem {
             {
                 //TODO: PASS THE DATA BACK TO THE MAIN FORM. WHEN WE PASS THE DATA BACK, WE MUST ALSO DISABLE BUTTONS.
                 //ALL BUTTONS SHOULD BE DISABLED EXCEPT FOR CANCEL, EDIT INVOICE, AND DELETE INVOICE.
+                //get selected invoice
+                ReturnInvoice = (Invoice)dtaGrdsInvoices.SelectedItem; //set the as the invoice to be returned
+                this.Close();
             }
             catch
             {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
+        }
+
+        private void cbxSelectionChanged(object sender, SelectionChangedEventArgs e) {
+            //get the selected invoice
+            Invoice invoice = (Invoice)cbxCriteria1.SelectedItem;
+            //query the database with the invoice id and put the results into an observable array
+            _invoices = ja.selectInvoiceById(invoice.InvoiceCode);
+            //data bind the invoices for all further queries
+            dtaGrdsInvoices.ItemsSource = _invoices;
+        }
+
+        private void dateWasChanged(object sender, SelectionChangedEventArgs e) {
+            //get the selected date
+            string date = datePicker.Text;
+            //query the database with the date and put results into an observable array
+            _invoices = ja.selectInvoicesByDate(date);
+            //data bind the invoices for all further queries
+            dtaGrdsInvoices.ItemsSource = _invoices;
+        }
+
+        private void totalCostChanged(object sender, SelectionChangedEventArgs e) {
+            //get the selected invoice
+            Invoice invoice = (Invoice)cbxCriteria3.SelectedItem;
+            //query the database with the invoice id and put the results into an observable array
+            _invoices = ja.selectInvoicesByTotal(invoice.InvoiceTotal);
+            //data bind the invoices for all further queries
+            dtaGrdsInvoices.ItemsSource = _invoices;
         }
     }//end Search Window
 }

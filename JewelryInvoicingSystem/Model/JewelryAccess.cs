@@ -53,6 +53,46 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         /// <summary>
+        /// SQL Statement that selects all items from an invoice
+        /// </summary>
+        /// <returns>An ObservableCollection of InvoiceItems</returns>
+        public ObservableCollection<InvoiceItem> selectItemsFromInvoice(int id) {
+            ObservableCollection<InvoiceItem> col_Items;
+            string sSQL;    //Holds an SQL statement
+            string s2SQL;
+            int iRet = 0;   //Number of return values
+            DataSet ds = new DataSet(); //Holds the return values
+            sSQL = "SELECT ItemCode, ItemCost FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
+            col_Items = new ObservableCollection<InvoiceItem>();
+            try {
+                ds = db.ExecuteSQLStatement(sSQL, ref iRet);
+
+                //Creates Item objects based on the data pulled from the query
+                for (int i = 0; i < iRet; i++) {
+                    InvoiceItem invoiceItem = new InvoiceItem();
+                    Item item = new Item();
+
+                    invoiceItem.ItemCost = double.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
+                    int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
+
+                    s2SQL = "SELECT ItemName FROM Item WHERE ItemCode = " + itemCode + ";";
+                    int ret = 0;
+                    DataSet ds2 = db.ExecuteSQLStatement(s2SQL, ref ret);
+
+                    item.ItemName = ds2.Tables[0].Rows[0]["ItemName"].ToString();
+                    item.ItemCode = itemCode;
+
+                    invoiceItem.Item = item;
+
+                    col_Items.Add(invoiceItem);
+                }
+            } catch (Exception e) {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            return col_Items;
+        }
+
+        /// <summary>
         /// SQL Statement that selects an item by id
         /// </summary>
         /// <returns>An ObservableCollection of items</returns>
@@ -61,7 +101,7 @@ namespace JewelryInvoicingSystem.Model {
             string sSQL;    //Holds an SQL statement
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT ItemCode, ItemName, ItemDesc, ItemCost FROM Item WHERE ItemCode = " + id;
+            sSQL = "SELECT ItemCode, ItemName, ItemCost FROM Item WHERE ItemCode = " + id;
             col_Items = new ObservableCollection<Item>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -80,7 +120,7 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         /// <summary>
-        /// SQL Statement that selects all invoices
+        /// SQL Statement that selects all invoices by Id
         /// </summary>
         /// <returns>An ObservableCollection of Invoices</returns>
         public ObservableCollection<Invoice> selectInvoices() {
@@ -88,7 +128,7 @@ namespace JewelryInvoicingSystem.Model {
             string sSQL;    //Holds an SQL statement
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT InvoiceCode, InvoiceDate FROM Invoice";
+            sSQL = "SELECT * FROM Invoice";
             col_Items = new ObservableCollection<Invoice>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -97,8 +137,9 @@ namespace JewelryInvoicingSystem.Model {
                 for (int i = 0; i < iRet; i++) {
                     Invoice invoice = new Invoice();
 
-                    invoice.InvoiceCode = int.Parse(ds.Tables[0].Rows[0]["InvoiceCode"].ToString());
-                    invoice.InvoiceDate = DateTime.Parse(ds.Tables[0].Rows[0]["InvoiceDate"].ToString());
+                    invoice.InvoiceCode = int.Parse(ds.Tables[0].Rows[i]["InvoiceCode"].ToString());
+                    invoice.InvoiceDate = DateTime.Parse(ds.Tables[0].Rows[i]["InvoiceDate"].ToString());
+                    invoice.InvoiceTotal = double.Parse(ds.Tables[0].Rows[i]["InvoiceTotal"].ToString());
 
                     col_Items.Add(invoice);
                 }
@@ -117,18 +158,81 @@ namespace JewelryInvoicingSystem.Model {
             string sSQL;    //Holds an SQL statement
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT InvoiceCode, InvoiceDate FROM Invoice WHERE InvoiceCode = " + id;
+            sSQL = "SELECT * FROM Invoice WHERE InvoiceCode = " + id + ";";
             col_Items = new ObservableCollection<Invoice>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
 
                 //Creates Invoice objects based on the data pulled from the query
-                Invoice invoice = new Invoice();
+                for (int i = 0; i < iRet; i++) {
+                    Invoice invoice = new Invoice();
 
-                invoice.InvoiceCode = int.Parse(ds.Tables[0].Rows[0]["InvoiceCode"].ToString());
-                invoice.InvoiceDate = DateTime.Parse(ds.Tables[0].Rows[0]["InvoiceDate"].ToString());
+                    invoice.InvoiceCode = int.Parse(ds.Tables[0].Rows[i]["InvoiceCode"].ToString());
+                    invoice.InvoiceDate = DateTime.Parse(ds.Tables[0].Rows[i]["InvoiceDate"].ToString());
+                    invoice.InvoiceTotal = double.Parse(ds.Tables[0].Rows[i]["InvoiceTotal"].ToString());
 
-                col_Items.Add(invoice);
+                    col_Items.Add(invoice);
+                }
+            } catch (Exception e) {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            return col_Items;
+        }
+
+        /// <summary>
+        /// SQL Statement that selects an invoice by date
+        /// </summary>
+        /// <returns>An ObservableCollection of Invoices</returns>
+        public ObservableCollection<Invoice> selectInvoicesByDate(string date) {
+            ObservableCollection<Invoice> col_Items;
+            string sSQL;    //Holds an SQL statement
+            int iRet = 0;   //Number of return values
+            DataSet ds = new DataSet(); //Holds the return values
+            sSQL = "SELECT * FROM Invoice WHERE InvoiceDate = #" + date + "#;";
+            col_Items = new ObservableCollection<Invoice>();
+            try {
+                ds = db.ExecuteSQLStatement(sSQL, ref iRet);
+
+                //Creates Invoice objects based on the data pulled from the query
+                for (int i = 0; i < iRet; i++) {
+                    Invoice invoice = new Invoice();
+
+                    invoice.InvoiceCode = int.Parse(ds.Tables[0].Rows[i]["InvoiceCode"].ToString());
+                    invoice.InvoiceDate = DateTime.Parse(ds.Tables[0].Rows[i]["InvoiceDate"].ToString());
+                    invoice.InvoiceTotal = double.Parse(ds.Tables[0].Rows[i]["InvoiceTotal"].ToString());
+
+                    col_Items.Add(invoice);
+                }
+            } catch (Exception e) {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            return col_Items;
+        }
+
+        /// <summary>
+        /// SQL Statement that selects an invoice by total
+        /// </summary>
+        /// <returns>An ObservableCollection of Invoices</returns>
+        public ObservableCollection<Invoice> selectInvoicesByTotal(double total) {
+            ObservableCollection<Invoice> col_Items;
+            string sSQL;    //Holds an SQL statement
+            int iRet = 0;   //Number of return values
+            DataSet ds = new DataSet(); //Holds the return values
+            sSQL = "SELECT * FROM Invoice WHERE InvoiceTotal <= " + total + ";";
+            col_Items = new ObservableCollection<Invoice>();
+            try {
+                ds = db.ExecuteSQLStatement(sSQL, ref iRet);
+
+                //Creates Invoice objects based on the data pulled from the query
+                for (int i = 0; i < iRet; i++) {
+                    Invoice invoice = new Invoice();
+
+                    invoice.InvoiceCode = int.Parse(ds.Tables[0].Rows[i]["InvoiceCode"].ToString());
+                    invoice.InvoiceDate = DateTime.Parse(ds.Tables[0].Rows[i]["InvoiceDate"].ToString());
+                    invoice.InvoiceTotal = double.Parse(ds.Tables[0].Rows[i]["InvoiceTotal"].ToString());
+
+                    col_Items.Add(invoice);
+                }
             } catch (Exception e) {
                 Console.WriteLine("{0} Exception caught.", e);
             }
@@ -275,11 +379,13 @@ namespace JewelryInvoicingSystem.Model {
         /// SQL Statement that deletes an invoice
         /// </summary>
         /// <returns>true if successful or false if unsuccessful</returns>
-        public bool deleteInvoice(int id) {
+        public bool deleteInvoice(ObservableCollection<Invoice> invoices) {
+            //only ever one invoice
+            Invoice invoice = invoices.ElementAt(0);
             string sSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
             sSQL = "DELETE FROM Invoice " +
-                   "WEHERE InvoiceCode = " + id;
+                   "WHERE InvoiceCode = " + invoice.InvoiceCode + ";";
             try {
                 rowCount = db.ExecuteNonQuery(sSQL);
                 //if insert unsuccessful

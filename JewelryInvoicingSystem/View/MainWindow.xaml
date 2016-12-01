@@ -5,7 +5,8 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JewelryInvoicingSystem"
         mc:Ignorable="d"
-        Title="Jewelry Invoicing System" Height="614.785" Width="588.862" WindowStartupLocation="CenterScreen">
+        Title="Jewelry Invoicing System" Height="614.785" Width="588.862" WindowStartupLocation="CenterScreen"
+         DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Window.Resources>
         <Style x:Key="grayButtons" TargetType="Button">
@@ -22,10 +23,10 @@
 
 
     </Window.Resources>
-    
+
 
     <Grid Margin="0,0,-6.667,0.333">
-        <DataGrid
+        <DataGrid ItemsSource="{Binding InvoiceItems}"
                   AutoGenerateColumns="False"
                   x:Name="dataGrid" 
                   HorizontalAlignment="Left" 
@@ -103,7 +104,7 @@
                 VerticalAlignment="Top" 
                 Width="165" 
                 Height="34" 
-                IsEnabled="False"/>
+                IsEnabled="False" Click="btnDeleteInvoice_Click"/>
         
         <Label x:Name="lblInvoiceNum" 
                Content="Invoice #:" 

@@ -15,12 +15,24 @@ namespace JewelryInvoicingSystem.Model {
         /// Invoice Date Created
         /// </summary>
         private DateTime _invoiceDate;
+        /// <summary>
+        /// Invoice Total Created
+        /// </summary>
+        private double _invoiceTotal;
 
         /// <summary>
         /// Constructor
         /// </summary>
         public Invoice() {
 
+        }
+
+        /// <summary>
+        /// String representation of an invoice
+        /// </summary>
+        /// <returns></returns>
+        public override string ToString() {
+            return InvoiceCode.ToString();
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
@@ -40,6 +52,19 @@ namespace JewelryInvoicingSystem.Model {
                 if (value != _invoiceCode) {
                     _invoiceCode = value;
                     OnPropertyChanged("InvoiceCode");
+                }
+            }
+        }
+
+        //getters and setters
+        public double InvoiceTotal {
+            get {
+                return _invoiceTotal;
+            }
+            set {
+                if (value != _invoiceTotal) {
+                    _invoiceTotal = value;
+                    OnPropertyChanged("InvoiceTotal");
                 }
             }
         }
