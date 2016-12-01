@@ -100,7 +100,7 @@ namespace JewelryInvoicingSystem.Model {
             string s2SQL;
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT ItemCode, ItemCost, ItemDesc FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
+            sSQL = "SELECT ItemCode, InvoiceCode, ItemCost FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
             col_Items = new ObservableCollection<InvoiceItem>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -113,12 +113,13 @@ namespace JewelryInvoicingSystem.Model {
                     invoiceItem.ItemCost = double.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
                     int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
 
-                    s2SQL = "SELECT ItemName, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
+                    s2SQL = "SELECT ItemName, ItemCost, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
                     int ret = 0;
                     DataSet ds2 = db.ExecuteSQLStatement(s2SQL, ref ret);
 
                     item.ItemName = ds2.Tables[0].Rows[0]["ItemName"].ToString();
                     item.ItemDesc = ds2.Tables[0].Rows[0]["ItemDesc"].ToString();
+                    item.ItemCost = int.Parse(ds2.Tables[0].Rows[0]["ItemCost"].ToString());
                     item.ItemCode = itemCode;
 
                     invoiceItem.Item = item;
@@ -150,6 +151,7 @@ namespace JewelryInvoicingSystem.Model {
 
                 item.ItemCode = int.Parse(ds.Tables[0].Rows[0]["ItemCode"].ToString());
                 item.ItemName = ds.Tables[0].Rows[0]["ItemName"].ToString();
+                item.ItemCost = int.Parse(ds.Tables[0].Rows[0]["ItemCost"].ToString());
 
                 col_Items.Add(item);
             } catch (Exception e) {

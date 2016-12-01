@@ -175,9 +175,7 @@ namespace JewelryInvoicingSystem {
                     dtePck.SetBinding(DatePicker.TextProperty, b2);
                     //data bind the InvoiceItems
                     InvoiceItems.Clear();
-                    foreach(InvoiceItem el in ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode)) {
-                        InvoiceItems.Add(el);
-                    }
+                    dataGrid.ItemsSource = ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode);
                     //set to ReadOnly
                     dataGrid.IsReadOnly = true;
                     //enable edit and delete
