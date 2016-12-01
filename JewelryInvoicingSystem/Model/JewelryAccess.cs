@@ -97,7 +97,7 @@ namespace JewelryInvoicingSystem.Model {
             string s2SQL;
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT ItemCode, ItemCost FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
+            sSQL = "SELECT ItemCode, ItemCost, ItemDesc FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
             col_Items = new ObservableCollection<InvoiceItem>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -110,11 +110,12 @@ namespace JewelryInvoicingSystem.Model {
                     invoiceItem.ItemCost = double.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
                     int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
 
-                    s2SQL = "SELECT ItemName FROM Item WHERE ItemCode = " + itemCode + ";";
+                    s2SQL = "SELECT ItemName, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
                     int ret = 0;
                     DataSet ds2 = db.ExecuteSQLStatement(s2SQL, ref ret);
 
                     item.ItemName = ds2.Tables[0].Rows[0]["ItemName"].ToString();
+                    item.ItemDesc = ds2.Tables[0].Rows[0]["ItemDesc"].ToString();
                     item.ItemCode = itemCode;
 
                     invoiceItem.Item = item;
@@ -285,8 +286,8 @@ namespace JewelryInvoicingSystem.Model {
         public bool insertItem(Item item) {
             string sSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
-            sSQL = "INSERT INTO Item (ItemName, ItemCost) " +
-                   "VALUES(" + item.ItemName + ")";
+            sSQL = "INSERT INTO Item (ItemName, ItemDesc, ItemCost) " +
+                   "VALUES('" + item.ItemName + "', " + "'" + item.ItemDesc + "', " + item.ItemCost + ");";
             try {
                 rowCount = db.ExecuteNonQuery(sSQL);
                 //if insert unsuccessful
