@@ -53,7 +53,12 @@ namespace JewelryInvoicingSystem {
 
         public ObservableCollection<Invoice> Invoices {
             get { return _invoices; }
-            set { _invoices = value; }
+            set {
+                if (value != _invoices) {
+                    _invoices = value;
+                    OnPropertyChanged("Invoices");
+                }
+            }
         }
 
         public ObservableCollection<InvoiceItem> InvoiceItems {
@@ -81,7 +86,10 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-
+                if (Invoices.Count != 0) {
+                    Invoices.Clear();
+                    InvoiceItems.Clear();
+                }
                 //enable data fields for use
                 btnAddItem.IsEnabled = true;
                 btnNewInvoice.IsEnabled = false;
@@ -325,6 +333,7 @@ namespace JewelryInvoicingSystem {
             bool result = ja.deleteInvoice(Invoices);
             if(result) {
                 Invoices.Clear();
+                InvoiceItems.Clear();
                 //enable data fields for use
                 btnEditInvoice.IsEnabled = false;
                 btnDeleteInvoice.IsEnabled = false;
