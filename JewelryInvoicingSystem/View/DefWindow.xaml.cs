@@ -371,9 +371,7 @@ namespace JewelryInvoicingSystem {
                     //data bind it
                     //dtaGrdInventory.ItemsSource = Items;
 
-                    //enable fields
-                    txtName.Text = txtCost.Text = txtItemDescription.Text = "";
-                    btnSaveAndClose.IsEnabled = true;
+                    
 
                     ReturnItems = newItem;
                 }
@@ -382,6 +380,13 @@ namespace JewelryInvoicingSystem {
                     //if there is no data entered
                     MessageBox.Show("Please enter data into the fields", "Error", MessageBoxButton.OK, MessageBoxImage.Hand);
                 }
+
+                //enable fields
+                txtName.Text = txtCost.Text = txtItemDescription.Text = "";
+                btnSaveAndClose.IsEnabled = true;
+                btnAddNew.IsEnabled = true;
+                btnDelete.IsEnabled = true;
+                btnEdit.IsEnabled = true;
             }
             catch 
             {
@@ -393,9 +398,16 @@ namespace JewelryInvoicingSystem {
 
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
+            try
+            {
 
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                  MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
-
         private void dtaGrdInventory_SelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if(sender != null)
