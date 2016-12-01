@@ -36,7 +36,7 @@
                 Click="btnClose_Click"/>
 
         <Button x:Name="btnSaveAndClose" 
-                Content="Save and Close" 
+                Content="Close" 
                 HorizontalAlignment="Left" 
                 Margin="445,515,0,0" 
                 VerticalAlignment="Top" 

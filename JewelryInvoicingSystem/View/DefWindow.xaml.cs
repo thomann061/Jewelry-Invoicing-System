@@ -411,10 +411,6 @@ namespace JewelryInvoicingSystem {
                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
-        private void dtaGrdInventory_SelectionChanged(object sender, SelectionChangedEventArgs e)
-        {
-            if(sender != null)
-            { }
-        }
+      
     }//Def Window
 }
