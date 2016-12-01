@@ -4,6 +4,50 @@
              xmlns:local="clr-namespace:JewelryInvoicingSystem"
              StartupUri="View/MainWindow.xaml">
     <Application.Resources>
-         
+
+
+        <!--Style for the gray buttons-->
+        <Style x:Key="grayButtons" TargetType="Button">
+            <Setter Property="Background" Value="#898584" />
+            <Setter Property="BorderBrush"  Value="Black"/>
+            <Setter Property="BorderThickness" Value="2"/>
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+
+        <!--Style for the Red buttons-->
+        <Style x:Key="redStyle" TargetType="Button" BasedOn="{StaticResource grayButtons}">
+            <Setter Property="Background" Value="#BA0000"/>
+            <Setter Property="Foreground" Value="#989994"/>
+        </Style>
+        
+        <!--Red Style for Menu-->
+        <Style x:Key="redMenu" TargetType="Menu" >
+            <Setter Property="Background" Value="#BA0000"/>
+            <Setter Property="Foreground" Value="#989994"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
+
+        <!--Beige Style for the text fields-->
+        <Style x:Key="TextBeigeBackground" TargetType="TextBox">
+            <Setter Property="Background" Value="BlanchedAlmond"/>
+        </Style>
+
+        <!--Beige Style for the date picker field-->
+        <Style x:Key="DateBeigeBackground" TargetType="DatePicker">
+            <Setter Property="Background" Value="BlanchedAlmond"/>
+        </Style>
+
+        <!--Beige Style for the ComboBox fields-->
+        <Style x:Key="ComboBeigeBackground" TargetType="ComboBox">
+            <Setter Property="Background" Value="BlanchedAlmond"/>
+        </Style>
+
+        <!--Beige Style for the label fields-->
+        <Style x:Key="LabelBeigeBackground" TargetType="Label">
+            <Setter Property="Background" Value="BlanchedAlmond"/>
+        </Style>
+        
+
     </Application.Resources>
 </Application>

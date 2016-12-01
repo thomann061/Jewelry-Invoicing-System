@@ -53,6 +53,40 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         /// <summary>
+        /// SQL statement that pulls the item description and name; ////////////////////////////////////////NEED TO GET COST STILL
+        /// </summary>
+        /// <returns></returns>
+        public ObservableCollection<Item> selectItemNameAndDesc()
+        {
+            ObservableCollection<Item> col_Items;
+            string sSQL;    //Holds an SQL statement
+            int iRet = 0;   //Number of return values
+            DataSet ds = new DataSet(); //Holds the return values
+            sSQL = "SELECT Item.ItemDesc, Item.ItemName FROM Item ";
+            col_Items = new ObservableCollection<Item>();
+            try
+            {
+                ds = db.ExecuteSQLStatement(sSQL, ref iRet);
+
+                //Creates Item objects based on the data pulled from the query
+                for (int i = 0; i < iRet; i++)
+                {
+                    Item item = new Item();
+
+                    item.ItemDesc = ds.Tables[0].Rows[i]["ItemDesc"].ToString();
+                    item.ItemName = ds.Tables[0].Rows[i]["ItemName"].ToString();
+
+                    col_Items.Add(item);
+                }
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            return col_Items;
+        }
+
+        /// <summary>
         /// SQL Statement that selects all items from an invoice
         /// </summary>
         /// <returns>An ObservableCollection of InvoiceItems</returns>

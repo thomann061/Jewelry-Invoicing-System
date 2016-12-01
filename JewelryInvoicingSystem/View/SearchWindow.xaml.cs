@@ -33,8 +33,6 @@ namespace JewelryInvoicingSystem {
         {
             InitializeComponent();
             this.mainWindow = mainWindow;
-            //No data will be passed into the window here since the user only wishes to search invoices for now. 
-            //Later, we wil pass what data the user wants back to the main window 
             //load in all invoices to the combobox
             ja = new JewelryAccess();
             //select all invoices

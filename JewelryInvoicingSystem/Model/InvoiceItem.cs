@@ -15,6 +15,10 @@ namespace JewelryInvoicingSystem.Model {
         /// Item
         /// </summary>
         private Item _item;
+        /// <summary>
+        /// Item Code
+        /// </summary>
+        private int _itemCode;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -48,5 +52,22 @@ namespace JewelryInvoicingSystem.Model {
                 }
             }
         }
+
+        public int ItemCode
+        {
+            get
+            {
+                return _itemCode;
+            }
+            set
+            {
+                if (value != _itemCode)
+                {
+                    _itemCode = value;
+                    OnPropertyChanged("ItemCode");
+                }
+            }
+        }
+
     }
 }

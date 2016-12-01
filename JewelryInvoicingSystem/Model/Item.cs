@@ -11,10 +11,16 @@ namespace JewelryInvoicingSystem.Model {
         /// Item identifier
         /// </summary>
         private int _itemCode;
+
         /// <summary>
         /// Item Name
         /// </summary>
         private string _itemName;
+
+        /// <summary>
+        /// Item description
+        /// </summary>
+        private string _itemDescription;
 
         /// <summary>
         /// Constructor for an item
@@ -64,6 +70,22 @@ namespace JewelryInvoicingSystem.Model {
                 if (value != _itemName) {
                     _itemName = value;
                     OnPropertyChanged("ItemName");
+                }
+            }
+        }
+
+        public string ItemDesc
+        {
+            get
+            {
+                return _itemDescription;
+            }
+            set
+            {
+                if (value != _itemDescription)
+                {
+                    _itemDescription = value;
+                    OnPropertyChanged("ItemDesc");
                 }
             }
         }

@@ -202,8 +202,22 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                DefWindow defWin = new DefWindow();
+                DefWindow defWin = new DefWindow(this);
                 defWin.ShowDialog();
+
+                if (defWin.ReturnItems != null)
+                {
+                    Items.Clear();
+                    Items.Add(defWin.ReturnItems);
+
+                    foreach (Item el in ja.selectItems())
+                    {
+                        Items.Add(el);
+                    }
+                    //set to ReadOnly
+                    dataGrid.IsReadOnly = true;
+                   
+                }
             }
             catch
             {

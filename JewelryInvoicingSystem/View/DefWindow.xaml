@@ -8,31 +8,41 @@
     Title="Inventory" Height="612.149" Width="618.73" WindowStartupLocation="CenterScreen">
 
     <Grid>
+
         <DataGrid x:Name="dtaGrdInventory" 
+                  AutoGenerateColumns="False"
                   HorizontalAlignment="Left" 
                   Margin="54,274,0,0" 
                   VerticalAlignment="Top" 
                   Height="219" 
-                  Width="510"/>
+                  Width="510" SelectionMode="Single">
+            <DataGrid.Columns>
+                <DataGridTextColumn Header="Item" IsReadOnly="True" Binding="{Binding ItemName}"/>
+                <DataGridTextColumn Header="Cost" IsReadOnly="True" Binding="{Binding ItemCost}"/>
+                <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding ItemDesc}"/>
+            </DataGrid.Columns>
+        </DataGrid>
 
         <Button x:Name="btnClose" 
-                Content="Close" 
+                Content="Cancel" 
                 HorizontalAlignment="Left" 
                 Margin="312,515,0,0" 
                 VerticalAlignment="Top" 
                 Width="104" 
                 Height="35" 
-                IsEnabled="False"
+                Style="{StaticResource redStyle}"
                 Click="btnClose_Click"/>
 
-        <Button x:Name="btnSave" 
-                Content="Save" 
+        <Button x:Name="btnSaveAndClose" 
+                Content="Save and Close" 
                 HorizontalAlignment="Left" 
                 Margin="445,515,0,0" 
                 VerticalAlignment="Top" 
                 Width="103" 
                 Height="35"
-                IsEnabled="False" Click="btnSave_Click"/>
+                IsEnabled="False" 
+                Style="{StaticResource grayButtons}"
+                Click="btnSaveAndClose_Click"/>
 
         <Button x:Name="btnAddNew" 
                 Content="Add New Item" 
@@ -40,6 +50,7 @@
                 Margin="54,47,0,0" 
                 VerticalAlignment="Top" 
                 Width="120" 
+                Style="{StaticResource grayButtons}"
                 Height="34" Click="btnAddNew_Click"/>
 
         <Button x:Name="btnEdit" 
@@ -48,7 +59,9 @@
                 Margin="54,104,0,0" 
                 VerticalAlignment="Top" 
                 Width="120" 
-                Height="34" Click="btnEdit_Click"/>
+                Height="34" 
+                Style="{StaticResource grayButtons}"
+                Click="btnEdit_Click"/>
 
         <Button x:Name="btnDelete" 
                 Content="Delete Item" 
@@ -56,7 +69,8 @@
                 Margin="54,159,0,0" 
                 VerticalAlignment="Top" 
                 Width="120" 
-                Height="34"/>
+                Height="34"
+                Style="{StaticResource grayButtons }" Click="btnDelete_Click"/>
 
         <Label x:Name="lblName" 
                Content="Item Name:" 
@@ -65,7 +79,7 @@
                VerticalAlignment="Top"/>
 
         <Label x:Name="lblCost" 
-               Content="Item Cost:" 
+               Content="Item Cost:      $" 
                HorizontalAlignment="Left" 
                Margin="291,85,0,0" 
                VerticalAlignment="Top"/>
@@ -99,19 +113,25 @@
         <Button x:Name="btnCancel" 
                 Content="Cancel" 
                 HorizontalAlignment="Left" 
-                Margin="54,515,0,0" 
+                Margin="326,228,0,0" 
                 VerticalAlignment="Top" 
-                Width="104" 
-                Height="35" Click="btnCancel_Click"/>
+                Width="100" 
+                Height="30"
+                Style="{StaticResource redStyle}"
+                Click="btnCancel_Click" Visibility="Hidden"
+                
+                />
 
-        <Button x:Name="btnClear" 
-                Content="Clear" 
+        <Button x:Name="btnSave" 
+                Content="Save and Stay" 
                 HorizontalAlignment="Left" 
                 Margin="464,228,0,0" 
                 VerticalAlignment="Top" 
                 Width="100" 
                 Height="30"
-                IsEnabled="False" Click="btnClear_Click"/>
+                IsEnabled="False" 
+                Style="{StaticResource grayButtons}"
+                Click="btnSave_Click"/>
         
         <TextBox x:Name="txtItemDescription" 
                  HorizontalAlignment="Left" 
