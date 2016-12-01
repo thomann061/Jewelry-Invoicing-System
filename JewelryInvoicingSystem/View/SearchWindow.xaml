@@ -19,7 +19,7 @@
                   VerticalAlignment="Top" 
                   Width="204" 
                   Height="23"
-                  Style="{StaticResource ComboBeigeBackground}"/>
+                  Style="{StaticResource ComboBeigeBackground}" SelectionChanged="cbxSelectionChanged"/>
 
         <ComboBox x:Name="cbxCriteria3" 
                   HorizontalAlignment="Left" 
@@ -27,7 +27,7 @@
                   VerticalAlignment="Top" 
                   Width="204" 
                   Height="23"
-                  Style="{StaticResource ComboBeigeBackground}"/>
+                  Style="{StaticResource ComboBeigeBackground}" SelectionChanged="totalCostChanged"/>
 
         <DataGrid x:Name="dtaGrdsInvoices" 
                   HorizontalAlignment="Left" 
@@ -62,7 +62,7 @@
                     VerticalAlignment="Top" 
                     Width="204" 
                     Height="25"
-                    Style="{StaticResource DateBeigeBackground}"/>
+                    Style="{StaticResource DateBeigeBackground}" SelectedDateChanged="dateWasChanged"/>
 
         <Label x:Name="lblInvoiceNum" 
                Content="Invoice #:" 
