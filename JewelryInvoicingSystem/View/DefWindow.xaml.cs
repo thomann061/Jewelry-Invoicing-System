@@ -145,9 +145,9 @@ namespace JewelryInvoicingSystem {
 
 
                     //set the InvoiceItem to an observable array
-                    Items.Add(newItem);
+                    //Items.Add(newItem);
                     //data bind it
-                    dtaGrdInventory.ItemsSource = Items;
+                    //dtaGrdInventory.ItemsSource = Items;
 
                     //insert the item into the database
                     ja.insertItem(newItem);
@@ -345,10 +345,6 @@ namespace JewelryInvoicingSystem {
                     Items.Add(newItem);
                     //data bind it
                     dtaGrdInventory.ItemsSource = Items;
-
-                    //insert the item into the database
-                    ja.insertItem(newItem);
-
 
                     //enable fields
                     txtName.Text = txtCost.Text = txtItemDescription.Text = "";
