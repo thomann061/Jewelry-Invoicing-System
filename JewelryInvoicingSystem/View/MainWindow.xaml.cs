@@ -1,5 +1,7 @@
-﻿using System;
+﻿using JewelryInvoicingSystem.Model;
+using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -19,9 +21,39 @@ namespace JewelryInvoicingSystem {
     /// </summary>
     public partial class MainWindow : Window
     {
+        private ObservableCollection<Item> _items;
+        private ObservableCollection<Invoice> _invoices;
+        private ObservableCollection<InvoiceItem> _invoiceItems;
+        private JewelryAccess ja;
+
         public MainWindow()
         {
             InitializeComponent();
+            ja = new JewelryAccess();
+            Items = new ObservableCollection<Item>();
+            Invoices = new ObservableCollection<Invoice>();
+            InvoiceItems = new ObservableCollection<InvoiceItem>();
+            populateItemsComboBox();
+        }
+
+        public ObservableCollection<Item> Items {
+            get { return _items; }
+            set { _items = value; }
+        }
+
+        public ObservableCollection<Invoice> Invoices {
+            get { return _invoices; }
+            set { _invoices = value; }
+        }
+
+        public ObservableCollection<InvoiceItem> InvoiceItems {
+            get { return _invoiceItems; }
+            set { _invoiceItems = value; }
+        }
+
+        private void populateItemsComboBox() {
+            Items = ja.selectItems();
+            cbxItem.ItemsSource = Items;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -34,14 +66,32 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
+
                 //enable data fields for use
-                btnDeleteItem.IsEnabled = true;
                 btnAddItem.IsEnabled = true;
+                btnNewInvoice.IsEnabled = false;
                 dtePck.IsEnabled = true;
                 btnCancel.IsEnabled = true;
                 btnSave.IsEnabled = true;
+                btnDeleteInvoice.IsEnabled = false;
+                btnEditInvoice.IsEnabled = false;
+                txtTotalCostCount.IsEnabled = true;
                 btnSearchInvoice.IsEnabled = false;
                 btnInventory.IsEnabled = false;
+
+                //create a new invoice
+                Invoice newInvoice = new Invoice();
+                //insert invoice into database
+                int id = ja.insertInvoice(newInvoice);
+                //update invoice with id
+                newInvoice.InvoiceCode = id;
+                //add to observable array
+                Invoices.Add(newInvoice);
+                //data bind the label and date
+                Binding b = new Binding("InvoiceCode");
+                b.Mode = BindingMode.TwoWay;
+                b.Source = newInvoice;
+                lblInvoice.SetBinding(Label.ContentProperty, b);
             }
 
             catch
@@ -61,7 +111,16 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-
+                //create a new InvoiceItem from Item and Cost
+                Item selectedItem = (Item) cbxItem.SelectedItem;
+                double cost = int.Parse(txtTotalCostCount.Text.ToString());
+                InvoiceItem newInvoiceItem = new InvoiceItem();
+                newInvoiceItem.Item = selectedItem;
+                newInvoiceItem.ItemCost = cost;
+                //set the InvoiceItem to an observable array
+                InvoiceItems.Add(newInvoiceItem);
+                //data bind it
+                dataGrid.ItemsSource = InvoiceItems;
             }
             catch
             {
@@ -120,7 +179,34 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
+                btnNewInvoice.IsEnabled = true;
+                //set the date for the invoice
+                if (dtePck.SelectedDate == null)
+                    MessageBox.Show("You must enter an invoice date!", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                else {
+                    Invoice newInvoice = Invoices.ElementAt(0);
+                    newInvoice.InvoiceDate = (DateTime)dtePck.SelectedDate;
 
+                    //data bind the InvoiceDate
+                    Binding b2 = new Binding("InvoiceDate");
+                    b2.Mode = BindingMode.TwoWay;
+                    b2.Source = newInvoice;
+                    dtePck.SetBinding(DatePicker.TextProperty, b2);
+                    bool result = ja.updateInvoiceWithItems(Invoices, InvoiceItems);
+                    if (result) {
+                        //enable data fields for use
+                        btnAddItem.IsEnabled = false;
+                        btnNewInvoice.IsEnabled = true;
+                        dtePck.IsEnabled = false;
+                        btnCancel.IsEnabled = false;
+                        btnDeleteInvoice.IsEnabled = true;
+                        btnEditInvoice.IsEnabled = true;
+                        btnSave.IsEnabled = false;
+                        txtTotalCostCount.IsEnabled = false;
+                        btnSearchInvoice.IsEnabled = true;
+                        btnInventory.IsEnabled = true;
+                    }
+                }
             }
             catch
             {
@@ -140,8 +226,8 @@ namespace JewelryInvoicingSystem {
             try
             {
                 //enable data fields for use
-                btnDeleteItem.IsEnabled = false;
                 btnAddItem.IsEnabled = false;
+                btnNewInvoice.IsEnabled = true;
                 dtePck.IsEnabled = false;
                 btnCancel.IsEnabled = false;
                 btnSave.IsEnabled = false;
@@ -174,6 +260,20 @@ namespace JewelryInvoicingSystem {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
                     MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
+        }
+
+        private void btnEditInvoice_Click(object sender, RoutedEventArgs e) {
+            //enable data fields for use
+            btnAddItem.IsEnabled = true;
+            btnNewInvoice.IsEnabled = false;
+            dtePck.IsEnabled = true;
+            btnCancel.IsEnabled = true;
+            btnDeleteInvoice.IsEnabled = false;
+            btnEditInvoice.IsEnabled = false;
+            btnSave.IsEnabled = true;
+            txtTotalCostCount.IsEnabled = true;
+            btnSearchInvoice.IsEnabled = true;
+            btnInventory.IsEnabled = true;
         }
     }//end Main Window
 }
