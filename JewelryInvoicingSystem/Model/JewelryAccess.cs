@@ -53,7 +53,7 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         /// <summary>
-        /// SQL statement that pulls the item description and name; ////////////////////////////////////////NEED TO GET COST STILL
+        /// SQL statement that pulls the item description and name; 
         /// </summary>
         /// <returns></returns>
         public ObservableCollection<Item> selectItemNameAndDesc()
@@ -62,7 +62,7 @@ namespace JewelryInvoicingSystem.Model {
             string sSQL;    //Holds an SQL statement
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT Item.ItemDesc, Item.ItemName FROM Item ";
+            sSQL = "SELECT ItemDesc, ItemName, ItemCost FROM Item ";
             col_Items = new ObservableCollection<Item>();
             try
             {
@@ -75,6 +75,7 @@ namespace JewelryInvoicingSystem.Model {
 
                     item.ItemDesc = ds.Tables[0].Rows[i]["ItemDesc"].ToString();
                     item.ItemName = ds.Tables[0].Rows[i]["ItemName"].ToString();
+                    item.ItemCost = int.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
 
                     col_Items.Add(item);
                 }

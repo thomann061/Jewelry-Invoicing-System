@@ -23,6 +23,11 @@ namespace JewelryInvoicingSystem.Model {
         private string _itemDescription;
 
         /// <summary>
+        /// Item Cost
+        /// </summary>
+        private int _itemCost;
+
+        /// <summary>
         /// Constructor for an item
         /// </summary>
         public Item() {
@@ -86,6 +91,23 @@ namespace JewelryInvoicingSystem.Model {
                 {
                     _itemDescription = value;
                     OnPropertyChanged("ItemDesc");
+                }
+            }
+        }
+
+
+        public int ItemCost
+        {
+            get
+            {
+                return _itemCost;
+            }
+            set
+            {
+                if (value != _itemCost)
+                {
+                    _itemCost = value;
+                    OnPropertyChanged("ItemCost");
                 }
             }
         }

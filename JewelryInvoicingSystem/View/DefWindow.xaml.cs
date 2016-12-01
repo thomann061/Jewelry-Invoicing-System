@@ -107,6 +107,10 @@ namespace JewelryInvoicingSystem {
                 btnEdit.IsEnabled = false;
                 btnDelete.IsEnabled = false;
 
+
+                
+                
+
             }
             catch
             {
@@ -119,7 +123,7 @@ namespace JewelryInvoicingSystem {
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Saves the database
+        /// Saves the new item that was entered and closes the form
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -127,6 +131,37 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
+
+                if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
+                {
+
+                    //Create a new item
+                    Item newItem = new Item();
+
+                    //Extract the text from the text fields and set them equal to a new Item.
+                    newItem.ItemName = txtName.Text.ToString();
+                    newItem.ItemDesc = txtItemDescription.Text.ToString();
+                    newItem.ItemCost = int.Parse(txtCost.Text.ToString());
+
+
+                    //set the InvoiceItem to an observable array
+                    Items.Add(newItem);
+                    //data bind it
+                    dtaGrdInventory.ItemsSource = Items;
+
+                    //insert the item into the database
+                    ja.insertItem(newItem);
+
+
+                    //enable fields
+                    txtName.Text = txtCost.Text = txtItemDescription.Text = "";
+                    btnSaveAndClose.IsEnabled = true;
+
+                    ReturnItems = newItem; 
+                }
+                
+
+                //Closes the form
                 Close();
 
             }
@@ -174,7 +209,7 @@ namespace JewelryInvoicingSystem {
             {
                 //disable the buttons
                 txtCost.IsEnabled = 
-                txtItemDescription.IsEnabled = 
+                txtName.IsEnabled = 
                 txtItemDescription.IsEnabled = false;
 
                 //enable action buttons
@@ -199,7 +234,7 @@ namespace JewelryInvoicingSystem {
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// 
+        /// When a user has chosen an item in the data grid to edit, this will populate the fields with the data for the user to edit.
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
@@ -214,7 +249,7 @@ namespace JewelryInvoicingSystem {
                 btnDelete.IsEnabled = false;
                 btnCancel.Visibility = Visibility.Visible;
 
-                
+               // dtaGrdInventory.CurrentCell
 
                 ////Make sure the current row is not null
                 //if (dtaGrdInventory.CurrentCell != null)
@@ -291,99 +326,45 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                //if any of the fields are null
-
-                Item newItem = new Item();
-
-                //Get the first and last name
-                txtName.Text = newItem.ItemName;
-                txtItemDescription.Text = newItem.ItemDesc;
-
-                //Create a new DataRow from the DataSet
-                DataRow DR = ds.Tables[0].NewRow();
-
-                //This value needs to be a unique value
-                DR[0] = Convert.ToString((ds.Tables[0].Rows.Count + 1));
-
-                //Add the first and last names to the DataSet
-                DR[1] = newItem.ItemName;
-                DR[2] = newItem.ItemDesc;
-
-                //Add the DataRow to the DataSet at the current row index
-                //ds.Tables[0].Rows.InsertAt(DR, dtaGrdInventory.CurrentColumn.DisplayIndex);
-
-                //This would add to the end
-                ds.Tables[0].Rows.Add(DR);
-
-                //Accept the changes to the DataSet so it will show up in the DataGridView
-                ds.AcceptChanges();
 
 
+                if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
+                {
+
+                    //Create a new item
+                    Item newItem = new Item();
 
 
+                    //Extract the text from the text fields and set them equal to a new Item.
+                    newItem.ItemName = txtName.Text.ToString();
+                    newItem.ItemDesc = txtItemDescription.Text.ToString();
+                    newItem.ItemCost = int.Parse(txtCost.Text.ToString());
 
 
-                //DataAccess db = new DataAccess();
-                /////Create a new item type to pass it into the ja.insertItem;
-                ////Item newItem = new Item();
-                //InvoiceItem newInvoiceItem = new InvoiceItem();
-                
-                //double cost = int.Parse(txtCost.Text.ToString());
+                    //set the InvoiceItem to an observable array
+                    Items.Add(newItem);
+                    //data bind it
+                    dtaGrdInventory.ItemsSource = Items;
+
+                    //insert the item into the database
+                    ja.insertItem(newItem);
 
 
+                    //enable fields
+                    txtName.Text = txtCost.Text = txtItemDescription.Text = "";
+                    btnSaveAndClose.IsEnabled = true;
 
-                ////txtName.Text = newItem.ItemName;
-                ////txtItemDescription.Text = newItem.ItemDescription;
-                //newItem.ItemCode = 0;
-                ////need to scalar query
-
-                ////newInvoiceItem.Description = txtItemDescription.Text.ToString();
-                ////name = txtName.ToString();
-                ////name = newItem.ItemName;
-
-                //newItem.ItemName = txtName.ToString();
-                ////newItem.ItemDescription = txtItemDescription.ToString();
-
-                //newInvoiceItem.ItemCost = cost;
-                ////newInvoiceItem.Description = txtName.ToString(); ;
-
-                ////newInvoiceItem.Description.ItemName = newItem.ToString();
-                
-                
-
-                ////add data
-                //Items.Add(newItem);
-                //InvoiceItems.Add(newInvoiceItem);
-
-                //////create a new InvoiceItem from Item and Cost
-                //////Item selectedItem = (Item)cbxItem.SelectedItem;
-                ////double cost = int.Parse(txtCost.Text.ToString());
-                ////Item newItem = new Item();
-                ////newItem.ItemName = txtName.ToString();
-                ////newItem.ItemDescription = txtItemDescription.ToString();
-                //////set the InvoiceItem to an observable array
-                //////Item = InvoiceItems.Add(newItem);
-                //////data bind it
-                //dtaGrdInventory.ItemsSource = InvoiceItems;
-
-                //ja.insertItem(newItem);
-
-
-
-
-                
-                
-                ////data bind it
-                //dtaGrdInventory.ItemsSource = InvoiceItems;
-
-
-
-
-                txtName.Text = txtCost.Text = txtItemDescription.Text = "";
+                    ReturnItems = newItem;
+                }
+                else
+                {
+                    //if there is no data entered
+                    MessageBox.Show("Please enter data into the fields", "Error", MessageBoxButton.OK, MessageBoxImage.Hand);
+                }
             }
-            catch
+            catch 
             {
-                MessageBox.Show("Sorry, something went wrong!", "Error",
+                MessageBox.Show("Sorry, something went wrong! Please enter appropriate data.", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
            
