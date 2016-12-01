@@ -335,5 +335,10 @@ namespace JewelryInvoicingSystem {
         {
 
         }
+
+        private void itemSelected(object sender, SelectionChangedEventArgs e) {
+            Item selectedItem = (Item)cbxItem.SelectedItem;
+            txtTotalCostCount.Text = selectedItem.ItemCost.ToString();
+        }
     }//end Main Window
 }

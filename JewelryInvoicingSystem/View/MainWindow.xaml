@@ -133,7 +133,7 @@
                   Margin="346,180,0,0" 
                   VerticalAlignment="Top" 
                   Width="120" 
-                  Height="26" />
+                  Height="26" SelectionChanged="itemSelected" />
 
         <Label x:Name="lblCost" 
                Content="Cost:" 
