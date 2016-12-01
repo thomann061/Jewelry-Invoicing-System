@@ -204,8 +204,8 @@ namespace JewelryInvoicingSystem {
             {
                 DefWindow defWin = new DefWindow(this);
                 defWin.ShowDialog();
-
-
+                populateItemsComboBox();
+                /*
                 if (defWin.ReturnItems != null)
                 {
                     Items.Clear();
@@ -248,7 +248,8 @@ namespace JewelryInvoicingSystem {
                         dataGrid.IsReadOnly = true;
 
                     }
-                }
+                    
+                }*/
             }
             catch
             {

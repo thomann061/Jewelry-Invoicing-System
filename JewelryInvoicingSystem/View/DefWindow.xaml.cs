@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 using System.Text;
@@ -22,9 +23,9 @@ namespace JewelryInvoicingSystem {
     public partial class DefWindow : Window {
         private MainWindow mainWindow;
         private ObservableCollection<Item> _items;
-        private ObservableCollection<Invoice> _invoices;
-        private ObservableCollection<InvoiceItem> _invoiceItems;
         private JewelryAccess ja;
+        private Item selectedItem;
+        private int selectedIndex;
         private Item _returnItems;
         DataAccess db = new DataAccess();
         DataSet ds = new DataSet();
@@ -35,41 +36,43 @@ namespace JewelryInvoicingSystem {
             set { _returnItems = value; }
         }
 
+        public ObservableCollection<Item> Items {
+            get { return _items; }
+            set {
+                if (value != _items) {
+                    _items = value;
+                    OnPropertyChanged("Items");
+                }
+            }
+        }
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        protected virtual void OnPropertyChanged(string propertyName) {
+            var handler = PropertyChanged;
+            if (handler != null)
+                handler(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+
         public DefWindow(MainWindow mainWindow)
         {
-            InitializeComponent();
+            this.DataContext = this;
             this.mainWindow = mainWindow;
             ja = new JewelryAccess();
-            Items = new ObservableCollection<Item>();
             //Invoices = new ObservableCollection<Invoice>();
             //InvoiceItems = new ObservableCollection<InvoiceItem>();
 
 
             //select all invoices
-            //ObservableCollection<Item> initialItems = ja.selectItems();
-
-            Items = ja.selectItemNameAndDesc();
+            Items = new ObservableCollection<Item>();
+            
+            InitializeComponent();
+            Items = ja.selectItems();
             dtaGrdInventory.ItemsSource = Items;
-            //dtaGrdInventory.IsReadOnly = true;
+            dtaGrdInventory.IsReadOnly = false;
 
-        }
 
-        public ObservableCollection<Item> Items
-        {
-            get { return _items; }
-            set { _items = value; }
-        }
-
-        public ObservableCollection<Invoice> Invoices
-        {
-            get { return _invoices; }
-            set { _invoices = value; }
-        }
-
-        public ObservableCollection<InvoiceItem> InvoiceItems
-        {
-            get { return _invoiceItems; }
-            set { _invoiceItems = value; }
         }
 
         private void populateItemsComboBox()
@@ -131,17 +134,17 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-
-                if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
-                {
+                //we probably dont need this button
+                //if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
+                //{
 
                     //Create a new item
-                    Item newItem = new Item();
+                    //Item newItem = new Item();
 
                     //Extract the text from the text fields and set them equal to a new Item.
-                    newItem.ItemName = txtName.Text.ToString();
-                    newItem.ItemDesc = txtItemDescription.Text.ToString();
-                    newItem.ItemCost = int.Parse(txtCost.Text.ToString());
+                    //newItem.ItemName = txtName.Text.ToString();
+                    //newItem.ItemDesc = txtItemDescription.Text.ToString();
+                    //newItem.ItemCost = int.Parse(txtCost.Text.ToString());
 
 
                     //set the InvoiceItem to an observable array
@@ -150,15 +153,15 @@ namespace JewelryInvoicingSystem {
                     //dtaGrdInventory.ItemsSource = Items;
 
                     //insert the item into the database
-                    ja.insertItem(newItem);
+                    //ja.updateAllItems(Items);
 
 
                     //enable fields
-                    txtName.Text = txtCost.Text = txtItemDescription.Text = "";
-                    btnSaveAndClose.IsEnabled = true;
+                    //txtName.Text = txtCost.Text = txtItemDescription.Text = "";
+                    //btnSaveAndClose.IsEnabled = true;
 
-                    ReturnItems = newItem; 
-                }
+                    //ReturnItems = newItem; 
+                //}
                 
 
                 //Closes the form
@@ -244,12 +247,27 @@ namespace JewelryInvoicingSystem {
             {
                 ///TODO: POPULATE THE NAME, COST, AND DESCRIPTION FIELDS WITH THE ITEM THE USER HAS SELECTED
                 ///TO BE EDITED IN THE DATAGRID
-                //disable the new and delete item button so ensure editing of current item
-                btnAddNew.IsEnabled = false;
-                btnDelete.IsEnabled = false;
-                btnCancel.Visibility = Visibility.Visible;
+                
 
-               // dtaGrdInventory.CurrentCell
+                //get first selected item
+                selectedItem = (Item) dtaGrdInventory.SelectedItems[0];
+                selectedIndex = dtaGrdInventory.SelectedIndex;
+                //bring text to screen
+                if (selectedItem != null) {
+                    //disable the new and delete item button so ensure editing of current item
+                    btnAddNew.IsEnabled = false;
+                    btnDelete.IsEnabled = false;
+                    txtName.IsEnabled = true;
+                    txtItemDescription.IsEnabled = true;
+                    txtCost.IsEnabled = true;
+                    btnSave.IsEnabled = true;
+                    btnCancel.Visibility = Visibility.Visible;
+                    //set text to screen
+                    txtName.Text = selectedItem.ItemName;
+                    txtItemDescription.Text = selectedItem.ItemDesc;
+                    txtCost.Text = selectedItem.ItemCost.ToString();
+                }
+
 
                 ////Make sure the current row is not null
                 //if (dtaGrdInventory.CurrentCell != null)
@@ -326,9 +344,16 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-
-
-                if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
+                if (selectedItem != null) {
+                    selectedItem.ItemName = txtName.Text.ToString();
+                    selectedItem.ItemDesc = txtItemDescription.Text.ToString();
+                    selectedItem.ItemCost = int.Parse(txtCost.Text.ToString());
+                    for (int i = 0; i < Items.Count; i++) {
+                        if (Items[i].ItemCode == selectedItem.ItemCode)
+                            Items[i] = selectedItem;
+                    }
+                    ja.updateItem(selectedItem); //update in database
+                } else if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
                 {
 
                     //Create a new item
@@ -344,7 +369,7 @@ namespace JewelryInvoicingSystem {
                     //set the InvoiceItem to an observable array
                     Items.Add(newItem);
                     //data bind it
-                    dtaGrdInventory.ItemsSource = Items;
+                    //dtaGrdInventory.ItemsSource = Items;
 
                     //enable fields
                     txtName.Text = txtCost.Text = txtItemDescription.Text = "";

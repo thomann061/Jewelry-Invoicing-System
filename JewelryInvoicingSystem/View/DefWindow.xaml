@@ -5,17 +5,19 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:JewelryInvoicingSystem"
         mc:Ignorable="d"
-    Title="Inventory" Height="612.149" Width="618.73" WindowStartupLocation="CenterScreen">
+    Title="Inventory" Height="612.149" Width="618.73" WindowStartupLocation="CenterScreen"
+       DataContext="{Binding RelativeSource={RelativeSource Self}}">
 
     <Grid>
 
-        <DataGrid x:Name="dtaGrdInventory" 
+        <DataGrid DataContext="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="dtaGrdInventory" 
+                  CanUserDeleteRows="True"
                   AutoGenerateColumns="False"
                   HorizontalAlignment="Left" 
                   Margin="54,274,0,0" 
                   VerticalAlignment="Top" 
                   Height="219" 
-                  Width="510" SelectionMode="Single">
+                  Width="510">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Item" IsReadOnly="True" Binding="{Binding ItemName}"/>
                 <DataGridTextColumn Header="Cost" IsReadOnly="True" Binding="{Binding ItemCost}"/>
@@ -39,8 +41,7 @@
                 Margin="445,515,0,0" 
                 VerticalAlignment="Top" 
                 Width="103" 
-                Height="35"
-                IsEnabled="False" 
+                Height="35" 
                 Style="{StaticResource grayButtons}"
                 Click="btnSaveAndClose_Click"/>
 

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JewelryInvoicingSystem"
         mc:Ignorable="d"
         Title="Jewelry Invoicing System" Height="614.785" Width="588.862" WindowStartupLocation="CenterScreen"
-         DataContext="{Binding RelativeSource={RelativeSource Self}}">
+         >
 
     <Window.Resources>
         <Style x:Key="grayButtons" TargetType="Button">

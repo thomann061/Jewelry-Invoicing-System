@@ -32,7 +32,7 @@ namespace JewelryInvoicingSystem.Model {
             string sSQL;    //Holds an SQL statement
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT ItemCode, ItemName FROM Item";
+            sSQL = "SELECT * FROM Item";
             col_Items = new ObservableCollection<Item>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -43,12 +43,15 @@ namespace JewelryInvoicingSystem.Model {
 
                     item.ItemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
                     item.ItemName = ds.Tables[0].Rows[i]["ItemName"].ToString();
+                    item.ItemDesc = ds.Tables[0].Rows[i]["ItemDesc"].ToString();
+                    item.ItemCost = int.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
 
                     col_Items.Add(item);
                 }
             } catch (Exception e) {
                 Console.WriteLine("{0} Exception caught.", e);
             }
+            Console.WriteLine(col_Items.Count);
             return col_Items;
         }
 
@@ -337,8 +340,8 @@ namespace JewelryInvoicingSystem.Model {
             string sSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
             sSQL = "UPDATE Item " +
-                   "SET ItemName=" + item.ItemName + ", ItemCost=" + " " +
-                   "WEHERE ItemCode = " + item.ItemCode;
+                   "SET ItemName='" + item.ItemName + "', ItemCost=" + item.ItemCost + ", ItemDesc='" + item.ItemDesc + "' " +
+                   "WHERE ItemCode = " + item.ItemCode;
             try {
                 rowCount = db.ExecuteNonQuery(sSQL);
                 //if insert unsuccessful
