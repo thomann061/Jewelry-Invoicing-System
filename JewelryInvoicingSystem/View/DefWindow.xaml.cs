@@ -269,28 +269,6 @@ namespace JewelryInvoicingSystem {
                 }
 
 
-                ////Make sure the current row is not null
-                //if (dtaGrdInventory.CurrentCell != null)
-                //{
-
-                //    //Check to see if the user is deleting a row
-                //    if (IsDeleting == false)
-                //    {
-                //        //Gives the current cell's row number
-                //        int iRowNum = dataGridView1.CurrentCell.RowIndex;
-                //        //or
-                //        iRowNum = dataGridView1.CurrentRow.Index;
-
-                //        //Make sure a valid row is selected
-                //        if (iRowNum < ds.Tables[0].Rows.Count)
-                //        {
-                //            //Put the highlighted row's data in the textboxes
-                //            txtUpdateFirstName.Text = ds.Tables[0].Rows[iRowNum][1].ToString();
-                //            txtUpdateLastName.Text = ds.Tables[0].Rows[iRowNum].ItemArray[2].ToString();
-                //        }
-                //    }
-                //}
-
             }
             catch
             {
@@ -403,7 +381,17 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
+                //get first selected item
+                selectedItem = (Item)dtaGrdInventory.SelectedItems[0];
+                selectedIndex = dtaGrdInventory.SelectedIndex;
 
+                int itemId = selectedItem.ItemCode;
+
+                bool result = ja.deleteItem(itemId);
+                if (result)
+                {
+                    Items.RemoveAt(selectedIndex);
+                }
             }
             catch
             {

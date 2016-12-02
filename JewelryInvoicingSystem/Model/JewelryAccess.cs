@@ -402,8 +402,7 @@ namespace JewelryInvoicingSystem.Model {
         public bool deleteItem(int id) {
             string sSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
-            sSQL = "DELETE FROM Item " +
-                   "WEHERE ItemCode = " + id;
+            sSQL = "DELETE FROM Item WHERE ItemCode = " + id;
             try {
                 rowCount = db.ExecuteNonQuery(sSQL);
                 //if insert unsuccessful
