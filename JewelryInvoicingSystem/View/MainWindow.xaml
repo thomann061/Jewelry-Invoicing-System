@@ -62,16 +62,6 @@
                 Height="34"
                 IsEnabled="False" Click="btnCancel_Click"/>
 
-        <Button x:Name="btnInventory" 
-                Content="Update Inventory" 
-                Style="{StaticResource redStyle}" 
-                HorizontalAlignment="Left" 
-                Margin="337,18,0,0" 
-                VerticalAlignment="Top" 
-                Width="222" 
-                Height="40" Click="btnInventory_Click"
-                Visibility="Hidden"/>
-
         <Button x:Name="btnNewInvoice" 
                 Content="Create New Invoice" 
                 Style="{StaticResource grayButtons}" 
@@ -79,17 +69,6 @@
                 Margin="31,99,0,0" 
                 VerticalAlignment="Top" 
                 Width="165" Height="34" Click="btnNewInvoice_Click"/>
-
-        <Button x:Name="btnSearchInvoice" 
-                Content="Search Existing Invoices" 
-                Style="{StaticResource grayButtons}" 
-                HorizontalAlignment="Left" 
-                Margin="31,147,0,0" 
-                VerticalAlignment="Top" 
-                Width="165" 
-                Height="34"
-                Visibility="Hidden"
-                Click="btnSearchInvoice_Click"/>
 
         <Button x:Name="btnEditInvoice" 
                 Content="Edit Invoice" 
@@ -197,8 +176,8 @@
               Width="296"
             Style="{StaticResource redMenu}">
             <Menu IsMainMenu="True"/>
-                <MenuItem Header="Update Inventory" Click="btnInventory_Click"  />
-            <MenuItem Header="Search Invoices" Click="btnSearchInvoice_Click"/>
+                <MenuItem x:Name="btnInventory" Header="Update Inventory" Click="btnInventory_Click"  />
+            <MenuItem x:Name="btnSearchInvoice" Header="Search Invoices" Click="btnSearchInvoice_Click"/>
             
         </Menu>
         <Button x:Name="btnDeleteitem" 

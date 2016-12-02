@@ -10,8 +10,8 @@
 
     <Grid>
 
-        <DataGrid DataContext="{Binding Items, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" x:Name="dtaGrdInventory" 
-                  CanUserDeleteRows="True"
+        <DataGrid ItemsSource="{Binding Items}" x:Name="dtaGrdInventory" 
+                  IsReadOnly="True"
                   AutoGenerateColumns="False"
                   HorizontalAlignment="Left" 
                   Margin="54,274,0,0" 

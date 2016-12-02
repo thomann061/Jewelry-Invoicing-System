@@ -16,7 +16,6 @@ namespace JewelryInvoicingSystem.ViewModel {
         public MainViewModel() {
             Items = new ObservableCollection<Item>();
             InvoiceItems = new ObservableCollection<InvoiceItem>();
-            Invoice = new Invoice();
             InvoiceItems.CollectionChanged += (s, e) => {
                 OnPropertyChanged("Total");
             };
@@ -38,6 +37,8 @@ namespace JewelryInvoicingSystem.ViewModel {
                 if (value != _invoice) {
                     _invoice = value;
                     OnPropertyChanged("Invoice");
+                    //OnPropertyChanged("InvoiceDate");
+                    //OnPropertyChanged("InvoiceCode");
                 }
             }
         }

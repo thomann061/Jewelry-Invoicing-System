@@ -47,10 +47,6 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                if (mainViewModel.Invoice != null) {
-                    mainViewModel.Invoice = null;
-                    mainViewModel.InvoiceItems.Clear();
-                }
                 //enable data fields for use
                 btnAddItem.IsEnabled = true;
                 btnDeleteitem.IsEnabled = true;
@@ -64,20 +60,15 @@ namespace JewelryInvoicingSystem {
                 btnSearchInvoice.IsEnabled = false;
                 btnInventory.IsEnabled = false;
                 dataGrid.IsEnabled = true;
+                btnExit.IsEnabled = false;
 
-                //create a new invoice
-                Invoice newInvoice = new Invoice();
-                //insert invoice into database
-                int id = ja.insertInvoice(newInvoice);
-                if (id != 0) {
-                    //update invoice with id
-                    newInvoice.InvoiceCode = id;
-                    newInvoice.InvoiceDate = DateTime.Now;
-                    //set new invoice to the view
-                    mainViewModel.Invoice = newInvoice;
-                    //unset ReadOnly from datagrid
-                    dataGrid.IsReadOnly = false;
-                }
+                //Default Constructors
+                mainViewModel.Invoice = new Invoice();
+                mainViewModel.InvoiceItems.Clear();
+
+                //get next id for an invoice
+                mainViewModel.Invoice.InvoiceDate = DateTime.Now;
+                mainViewModel.Invoice.InvoiceCode = ja.selectNextInvoiceId();
             }
 
             catch
@@ -99,12 +90,12 @@ namespace JewelryInvoicingSystem {
             {
                 //create a new InvoiceItem from Item and Cost
                 Item selectedItem = (Item) cbxItem.SelectedItem;
-                double cost = int.Parse(txtTotalCostCount.Text.ToString());
-                InvoiceItem newInvoiceItem = new InvoiceItem();
-                newInvoiceItem.Item = selectedItem;
-                newInvoiceItem.Item.ItemCost = cost;
-                //set the InvoiceItem to an observable array
-                mainViewModel.InvoiceItems.Add(newInvoiceItem);
+                if (selectedItem != null) {
+                    InvoiceItem newInvoiceItem = new InvoiceItem();
+                    newInvoiceItem.Item = selectedItem;
+                    //set the InvoiceItem to an observable array
+                    mainViewModel.InvoiceItems.Add(newInvoiceItem);
+                }
             }
             catch
             {
@@ -128,13 +119,7 @@ namespace JewelryInvoicingSystem {
                 //if the invoice is not null, set it to the current invoice
                 if(srchWin.ReturnInvoice != null) {
                     mainViewModel.Invoice = srchWin.ReturnInvoice;
-                    //data bind the InvoiceItems
-                    dataGrid.IsReadOnly = false;
-                    mainViewModel.InvoiceItems.Clear();
                     mainViewModel.InvoiceItems = ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode);
-                    //ObservableCollection<InvoiceItem> items = ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode);
-                    //set to ReadOnly
-                    dataGrid.IsReadOnly = true;
                     //enable edit and delete
                     btnDeleteInvoice.IsEnabled = true;
                     btnEditInvoice.IsEnabled = true;
@@ -159,8 +144,6 @@ namespace JewelryInvoicingSystem {
             {
                 DefWindow defWin = new DefWindow(this);
                 defWin.ShowDialog();
-                
-                
             }
             catch
             {
@@ -181,24 +164,29 @@ namespace JewelryInvoicingSystem {
             {
                 btnNewInvoice.IsEnabled = true;
                 //set the date for the invoice
-                if (dtePck.SelectedDate == null)
-                    MessageBox.Show("You must enter an invoice date!", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                if (dtePck.SelectedDate == null || dataGrid.Items.Count == 0)
+                    MessageBox.Show("You must enter an invoice date or at least one item.", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 else {
-                    bool result = ja.updateInvoiceWithItems(mainViewModel.Invoice, mainViewModel.InvoiceItems);
-                    if (result) {
-                        //enable data fields for use
-                        btnAddItem.IsEnabled = false;
-                        btnNewInvoice.IsEnabled = true;
-                        dtePck.IsEnabled = false;
-                        btnCancel.IsEnabled = false;
-                        btnDeleteInvoice.IsEnabled = true;
-                        btnEditInvoice.IsEnabled = true;
-                        btnSave.IsEnabled = false;
-                        txtTotalCostCount.IsEnabled = false;
-                        btnSearchInvoice.IsEnabled = true;
-                        btnInventory.IsEnabled = true;
-                        dataGrid.IsEnabled = false;
+                    //insert invoice
+                    if (ja.insertInvoice(mainViewModel.Invoice)) {
+                        bool result = ja.updateInvoiceWithItems(mainViewModel.Invoice, mainViewModel.InvoiceItems);
+                        if (result) {
+                            //enable data fields for use
+                            btnAddItem.IsEnabled = false;
+                            btnDeleteitem.IsEnabled = false;
+                            btnNewInvoice.IsEnabled = true;
+                            dtePck.IsEnabled = false;
+                            btnCancel.IsEnabled = false;
+                            btnDeleteInvoice.IsEnabled = true;
+                            btnEditInvoice.IsEnabled = true;
+                            btnSave.IsEnabled = false;
+                            txtTotalCostCount.IsEnabled = false;
+                            btnSearchInvoice.IsEnabled = true;
+                            btnInventory.IsEnabled = true;
+                            dataGrid.IsEnabled = false;
+                        }
                     }
+                    
                 }
             }
             catch
@@ -222,11 +210,15 @@ namespace JewelryInvoicingSystem {
                 btnAddItem.IsEnabled = false;
                 btnNewInvoice.IsEnabled = true;
                 dtePck.IsEnabled = false;
+                btnDeleteitem.IsEnabled = false;
                 btnCancel.IsEnabled = false;
                 btnSave.IsEnabled = false;
-                dtePck.Text = "";
                 btnSearchInvoice.IsEnabled = true;
                 btnInventory.IsEnabled = true;
+
+                //clear defaults
+                mainViewModel.Invoice = null;
+                mainViewModel.InvoiceItems.Clear();
             }
 
             catch
@@ -258,6 +250,7 @@ namespace JewelryInvoicingSystem {
         private void btnEditInvoice_Click(object sender, RoutedEventArgs e) {
             //enable data fields for use
             btnAddItem.IsEnabled = true;
+            btnDeleteInvoice.IsEnabled = false;
             btnDeleteitem.IsEnabled = true;
             btnNewInvoice.IsEnabled = false;
             dtePck.IsEnabled = true;
@@ -284,7 +277,7 @@ namespace JewelryInvoicingSystem {
 
         private void btnDeleteItm_Click(object sender, RoutedEventArgs e) {
             InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            if(ja.deleteItem(selectedItem.Item.ItemCode))
+            if (selectedItem != null || ja.deleteItem(selectedItem.Item.ItemCode))
                 mainViewModel.InvoiceItems.Remove(selectedItem);
         }
     }//end Main Window

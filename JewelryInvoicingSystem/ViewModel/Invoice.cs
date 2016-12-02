@@ -14,7 +14,7 @@ namespace JewelryInvoicingSystem.Model {
         /// <summary>
         /// Invoice Date Created
         /// </summary>
-        private DateTime? _invoiceDate;
+        private DateTime _invoiceDate;
         /// <summary>
         /// Invoice Total Created
         /// </summary>
@@ -55,7 +55,7 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         //getters and setters
-        public DateTime? InvoiceDate {
+        public DateTime InvoiceDate {
             get {
                 return _invoiceDate;
             }

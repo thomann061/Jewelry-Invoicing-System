@@ -91,6 +91,23 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         /// <summary>
+        /// Selects the next id for the invoice
+        /// </summary>
+        /// <returns></returns>
+        public int selectNextInvoiceId() {
+            string idSQL;    //Holds an SQL statement
+            int newId = 0;
+            idSQL = "SELECT TOP 1 InvoiceCode FROM Invoice ORDER BY InvoiceCode DESC;";
+            try {
+                newId = int.Parse(db.ExecuteScalarSQL(idSQL));
+            } catch (Exception e) {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            //if successful
+            return ++newId;
+        }
+
+        /// <summary>
         /// SQL Statement that selects all items from an invoice
         /// </summary>
         /// <returns>An ObservableCollection of InvoiceItems</returns>
@@ -307,25 +324,22 @@ namespace JewelryInvoicingSystem.Model {
         /// <summary>
         /// SQL Statement that inserts an invoice
         /// </summary>
-        /// <returns>id if success, otherwise 0</returns>
-        public int insertInvoice(Invoice invoice) {
+        /// <returns>if success true, otherwise false</returns>
+        public bool insertInvoice(Invoice invoice) {
             string sSQL;    //Holds an SQL statement
-            string idSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
-            int newId = 0;
-            sSQL = "INSERT INTO Invoice DEFAULT VALUES; ";
-            idSQL = "SELECT TOP 1 InvoiceCode FROM Invoice ORDER BY InvoiceCode DESC;";
+            sSQL = "INSERT INTO Invoice (InvoiceDate) " +
+                   "VALUES('" + invoice.InvoiceDate + "');";
             try {
                 rowCount = db.ExecuteNonQuery(sSQL);
-                newId = int.Parse(db.ExecuteScalarSQL(idSQL));
                 //if insert unsuccessful
                 if (rowCount == 0)
-                    return newId;
+                    return false;
             } catch (Exception e) {
                 Console.WriteLine("{0} Exception caught.", e);
             }
             //if successful
-            return newId;
+            return true;
         }
 
         //End Insert Statements
@@ -378,7 +392,7 @@ namespace JewelryInvoicingSystem.Model {
                 }
                 //execute Invoice
                 sSQL = "UPDATE Invoice " +
-                       "SET InvoiceDate=#" + invoice.InvoiceDate + "#, InvoiceTotal= " + total + " " +
+                       "SET InvoiceDate='" + invoice.InvoiceDate + "', InvoiceTotal= " + total + " " +
                        "WHERE InvoiceCode = " + invoice.InvoiceCode + ";";
                 rowCount = db.ExecuteNonQuery(sSQL);
                 //if insert unsuccessful
