@@ -169,7 +169,10 @@
                HorizontalAlignment="Left" 
                Margin="346,222,0,0" 
                VerticalAlignment="Top"
-               Background="BlanchedAlmond" Width="120" Height="26"/>
+               Background="BlanchedAlmond" 
+               Width="120" 
+               Height="26"
+               IsReadOnly="True"/>
 
         <Button x:Name="btnExit" 
                 Content="EXIT" 
