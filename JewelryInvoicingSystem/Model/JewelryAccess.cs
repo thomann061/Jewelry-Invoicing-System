@@ -362,24 +362,28 @@ namespace JewelryInvoicingSystem.Model {
             string sSQL;    //Holds an SQL statement
             string s2SQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
-            sSQL = "UPDATE Invoice " +
-                   "SET InvoiceDate='" + invoice.InvoiceDate + "' " +
-                   "WHERE InvoiceCode = " + invoice.InvoiceCode + ";";
             try {
-                rowCount = db.ExecuteNonQuery(sSQL);
-                //if insert unsuccessful
-                if (rowCount == 0)
-                    return false;
+                //store total
+                double total = 0;
 
                 //insert items
                 foreach (InvoiceItem el in invoiceItems) {
                     s2SQL = "INSERT INTO InvoiceItem (ItemCode, InvoiceCode)" +
                             "VALUES(" + el.Item.ItemCode + ", " + invoice.InvoiceCode + ");";
                     rowCount = db.ExecuteNonQuery(s2SQL);
+                    total += el.Item.ItemCost; //add up total
                     //if insert unsuccessful
                     if (rowCount == 0)
                         return false;
                 }
+                //execute Invoice
+                sSQL = "UPDATE Invoice " +
+                       "SET InvoiceDate=#" + invoice.InvoiceDate + "#, InvoiceTotal= " + total + " " +
+                       "WHERE InvoiceCode = " + invoice.InvoiceCode + ";";
+                rowCount = db.ExecuteNonQuery(sSQL);
+                //if insert unsuccessful
+                if (rowCount == 0)
+                    return false;
             } catch(Exception e) {
                 Console.WriteLine("{0} Exception caught.", e);
             }
