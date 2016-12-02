@@ -6,19 +6,11 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JewelryInvoicingSystem.Model {
-    public class InvoiceItem : INotifyPropertyChanged {
+    public class InvoiceItem : ObservableObject {
         /// <summary>
         /// Item
         /// </summary>
         private Item _item;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName) {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
 
         public Item Item {
             get {
