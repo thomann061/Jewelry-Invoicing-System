@@ -1,4 +1,5 @@
 ﻿using JewelryInvoicingSystem.Model;
+using JewelryInvoicingSystem.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,59 +23,19 @@ namespace JewelryInvoicingSystem {
     /// </summary>
     public partial class MainWindow : Window
     {
-        private ObservableCollection<Item> _items;
-        private ObservableCollection<Invoice> _invoices;
-        private ObservableCollection<InvoiceItem> _invoiceItems;
+        private MainViewModel mainViewModel;
         private JewelryAccess ja;
         
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName) {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
         public MainWindow()
         {
-            this.DataContext = this;
+            mainViewModel = new MainViewModel();
+            this.DataContext = mainViewModel;
             ja = new JewelryAccess();
-            Items = new ObservableCollection<Item>();
-            Invoices = new ObservableCollection<Invoice>();
-            InvoiceItems = new ObservableCollection<InvoiceItem>();
+            mainViewModel.Items = ja.selectItems(); //populate items box
             InitializeComponent();
-            populateItemsComboBox();
         }
 
-        public ObservableCollection<Item> Items {
-            get { return _items; }
-            set { _items = value; }
-        }
-
-        public ObservableCollection<Invoice> Invoices {
-            get { return _invoices; }
-            set {
-                if (value != _invoices) {
-                    _invoices = value;
-                    OnPropertyChanged("Invoices");
-                }
-            }
-        }
-
-        public ObservableCollection<InvoiceItem> InvoiceItems {
-            get { return _invoiceItems; }
-            set {
-                if (value != _invoiceItems) {
-                    _invoiceItems = value;
-                    OnPropertyChanged("InvoiceItems");
-                }
-            }
-        }
-
-        private void populateItemsComboBox() {
-            Items = ja.selectItems();
-            cbxItem.ItemsSource = Items;
-        }
+        
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -86,9 +47,9 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                if (Invoices.Count != 0) {
-                    Invoices.Clear();
-                    InvoiceItems.Clear();
+                if (mainViewModel.Invoice != null) {
+                    mainViewModel.Invoice = null;
+                    mainViewModel.InvoiceItems.Clear();
                 }
                 //enable data fields for use
                 btnAddItem.IsEnabled = true;
@@ -108,17 +69,15 @@ namespace JewelryInvoicingSystem {
                 Invoice newInvoice = new Invoice();
                 //insert invoice into database
                 int id = ja.insertInvoice(newInvoice);
-                //update invoice with id
-                newInvoice.InvoiceCode = id;
-                //add to observable array
-                Invoices.Add(newInvoice);
-                //data bind the label and date
-                Binding b = new Binding("InvoiceCode");
-                b.Mode = BindingMode.TwoWay;
-                b.Source = newInvoice;
-                lblInvoice.SetBinding(Label.ContentProperty, b);
-                //unset ReadOnly from datagrid
-                dataGrid.IsReadOnly = false;
+                if (id != 0) {
+                    //update invoice with id
+                    newInvoice.InvoiceCode = id;
+                    newInvoice.InvoiceDate = DateTime.Now;
+                    //set new invoice to the view
+                    mainViewModel.Invoice = newInvoice;
+                    //unset ReadOnly from datagrid
+                    dataGrid.IsReadOnly = false;
+                }
             }
 
             catch
@@ -143,11 +102,9 @@ namespace JewelryInvoicingSystem {
                 double cost = int.Parse(txtTotalCostCount.Text.ToString());
                 InvoiceItem newInvoiceItem = new InvoiceItem();
                 newInvoiceItem.Item = selectedItem;
-                newInvoiceItem.ItemCost = cost;
+                newInvoiceItem.Item.ItemCost = cost;
                 //set the InvoiceItem to an observable array
-                InvoiceItems.Add(newInvoiceItem);
-                //data bind it
-                //dataGrid.ItemsSource = InvoiceItems;
+                mainViewModel.InvoiceItems.Add(newInvoiceItem);
             }
             catch
             {
@@ -170,21 +127,12 @@ namespace JewelryInvoicingSystem {
                 srchWin.ShowDialog();
                 //if the invoice is not null, set it to the current invoice
                 if(srchWin.ReturnInvoice != null) {
-                    Invoices.Clear();
-                    Invoices.Add(srchWin.ReturnInvoice);
-                    //data bind the InvoiceCode
-                    Binding b = new Binding("InvoiceCode");
-                    b.Mode = BindingMode.TwoWay;
-                    b.Source = srchWin.ReturnInvoice;
-                    lblInvoice.SetBinding(Label.ContentProperty, b);
-                    //data bind the InvoiceDate
-                    Binding b2 = new Binding("InvoiceDate");
-                    b2.Mode = BindingMode.TwoWay;
-                    b2.Source = srchWin.ReturnInvoice;
-                    dtePck.SetBinding(DatePicker.TextProperty, b2);
+                    mainViewModel.Invoice = srchWin.ReturnInvoice;
                     //data bind the InvoiceItems
-                    InvoiceItems.Clear();
-                    dataGrid.ItemsSource = ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode);
+                    dataGrid.IsReadOnly = false;
+                    mainViewModel.InvoiceItems.Clear();
+                    mainViewModel.InvoiceItems = ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode);
+                    //ObservableCollection<InvoiceItem> items = ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode);
                     //set to ReadOnly
                     dataGrid.IsReadOnly = true;
                     //enable edit and delete
@@ -211,7 +159,7 @@ namespace JewelryInvoicingSystem {
             {
                 DefWindow defWin = new DefWindow(this);
                 defWin.ShowDialog();
-                populateItemsComboBox();
+                
                 
             }
             catch
@@ -236,15 +184,7 @@ namespace JewelryInvoicingSystem {
                 if (dtePck.SelectedDate == null)
                     MessageBox.Show("You must enter an invoice date!", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 else {
-                    Invoice newInvoice = Invoices.ElementAt(0);
-                    newInvoice.InvoiceDate = (DateTime)dtePck.SelectedDate;
-
-                    //data bind the InvoiceDate
-                    Binding b2 = new Binding("InvoiceDate");
-                    b2.Mode = BindingMode.TwoWay;
-                    b2.Source = newInvoice;
-                    dtePck.SetBinding(DatePicker.TextProperty, b2);
-                    bool result = ja.updateInvoiceWithItems(Invoices, InvoiceItems);
+                    bool result = ja.updateInvoiceWithItems(mainViewModel.Invoice, mainViewModel.InvoiceItems);
                     if (result) {
                         //enable data fields for use
                         btnAddItem.IsEnabled = false;
@@ -331,10 +271,10 @@ namespace JewelryInvoicingSystem {
 
         private void btnDeleteInvoice_Click(object sender, RoutedEventArgs e) {
             //delete an invoice
-            bool result = ja.deleteInvoice(Invoices);
+            bool result = ja.deleteInvoice(mainViewModel.Invoice);
             if(result) {
-                Invoices.Clear();
-                InvoiceItems.Clear();
+                mainViewModel.Invoice = null;
+                mainViewModel.InvoiceItems.Clear();
                 //enable data fields for use
                 btnEditInvoice.IsEnabled = false;
                 btnDeleteInvoice.IsEnabled = false;
@@ -353,7 +293,7 @@ namespace JewelryInvoicingSystem {
 
         private void btnDeleteItm_Click(object sender, RoutedEventArgs e) {
             InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            InvoiceItems.Remove(selectedItem);
+            mainViewModel.InvoiceItems.Remove(selectedItem);
         }
     }//end Main Window
 }

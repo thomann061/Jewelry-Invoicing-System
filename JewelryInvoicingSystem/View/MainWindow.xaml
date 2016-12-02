@@ -36,7 +36,8 @@
                   Width="536">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Item" IsReadOnly="True" Binding="{Binding Item.ItemName}"/>
-                <DataGridTextColumn Header="Cost" IsReadOnly="True" Binding="{Binding ItemCost}"/>
+                <DataGridTextColumn Header="Cost" IsReadOnly="True" Binding="{Binding Item.ItemCost}"/>
+                <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Item.ItemDesc}"/>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -128,7 +129,7 @@
                Margin="290,180,0,0" 
                VerticalAlignment="Top"/>
 
-        <ComboBox x:Name="cbxItem" 
+        <ComboBox ItemsSource="{Binding Items}" x:Name="cbxItem" 
                   HorizontalAlignment="Left" 
                   Margin="346,180,0,0" 
                   VerticalAlignment="Top" 
@@ -153,7 +154,7 @@
                 IsEnabled="False" Click="btnAddItem_Click"/>
 
         <Label x:Name="lblInvoice" 
-               Content="" 
+               Content="{Binding Invoice.InvoiceCode}" 
                HorizontalAlignment="Left" 
                Margin="346,99,0,0" 
                VerticalAlignment="Top" 
@@ -161,6 +162,7 @@
                Background="BlanchedAlmond" Height="26" />
 
         <DatePicker x:Name="dtePck" 
+                    Text="{Binding Invoice.InvoiceDate}"
                     HorizontalAlignment="Left" 
                     Margin="346,138,0,0" 
                     VerticalAlignment="Top" 

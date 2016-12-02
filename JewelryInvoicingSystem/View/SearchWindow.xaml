@@ -13,7 +13,7 @@
                Margin="21,28,0,0" 
                VerticalAlignment="Top"/>
 
-        <ComboBox x:Name="cbxCriteria1" 
+        <ComboBox ItemsSource="{Binding ComboBoxInvoices}" x:Name="cbxCriteria1" 
                   HorizontalAlignment="Left" 
                   Margin="267,63,0,0" 
                   VerticalAlignment="Top" 
@@ -21,15 +21,16 @@
                   Height="23"
                   Style="{StaticResource ComboBeigeBackground}" SelectionChanged="cbxSelectionChanged"/>
 
-        <ComboBox x:Name="cbxCriteria3" 
-                  HorizontalAlignment="Left" 
+        <ComboBox ItemsSource="{Binding ComboBoxInvoices}" x:Name="cbxCriteria3" 
+                  DisplayMemberPath="InvoiceTotal" HorizontalAlignment="Left" 
                   Margin="267,158,0,0" 
                   VerticalAlignment="Top" 
                   Width="204" 
                   Height="23"
                   Style="{StaticResource ComboBeigeBackground}" SelectionChanged="totalCostChanged"/>
 
-        <DataGrid x:Name="dtaGrdsInvoices" 
+        <DataGrid ItemsSource="{Binding Invoices}" x:Name="dtaGrdsInvoices" 
+                  IsReadOnly="True"
                   HorizontalAlignment="Left" 
                   Margin="39,211,0,0" 
                   VerticalAlignment="Top" 
