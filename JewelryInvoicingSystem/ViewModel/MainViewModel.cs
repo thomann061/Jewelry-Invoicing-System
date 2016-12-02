@@ -11,11 +11,15 @@ namespace JewelryInvoicingSystem.ViewModel {
         private ObservableCollection<Item> _items;
         private Invoice _invoice;
         private ObservableCollection<InvoiceItem> _invoiceItems;
+        private double _total;
 
         public MainViewModel() {
             Items = new ObservableCollection<Item>();
             InvoiceItems = new ObservableCollection<InvoiceItem>();
             Invoice = new Invoice();
+            InvoiceItems.CollectionChanged += (s, e) => {
+                OnPropertyChanged("Total");
+            };
         }
 
         public ObservableCollection<Item> Items {
@@ -38,12 +42,23 @@ namespace JewelryInvoicingSystem.ViewModel {
             }
         }
 
+        public double Total {
+            get { return _total = InvoiceItems.Sum(x => x.Item.ItemCost); }
+            set {
+                if (value != _total) {
+                    _total = value;
+                    OnPropertyChanged("Total");
+                }
+            }
+        }
+
         public ObservableCollection<InvoiceItem> InvoiceItems {
             get { return _invoiceItems; }
             set {
                 if (value != _invoiceItems) {
                     _invoiceItems = value;
                     OnPropertyChanged("InvoiceItems");
+                    OnPropertyChanged("Total");
                 }
             }
         }

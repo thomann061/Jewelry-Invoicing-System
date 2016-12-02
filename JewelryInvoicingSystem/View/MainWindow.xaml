@@ -210,9 +210,8 @@
             Height="27" 
             IsEnabled="False" Click="btnDeleteItm_Click"/>
         <Label 
-            
             x:Name="txtInvoiceTotal" 
-            Content="" 
+            Content="{Binding Total}" 
             HorizontalAlignment="Left" 
             Margin="92,487,0,0" 
             VerticalAlignment="Top"
