@@ -8,6 +8,10 @@ using System.Threading.Tasks;
 namespace JewelryInvoicingSystem.Model {
     public class InvoiceItem : ObservableObject {
         /// <summary>
+        /// Invoice Item Code
+        /// </summary>
+        private int _invoiceItemCode;
+        /// <summary>
         /// Item
         /// </summary>
         private Item _item;
@@ -20,6 +24,19 @@ namespace JewelryInvoicingSystem.Model {
                 if (value != _item) {
                     _item = value;
                     OnPropertyChanged("Item");
+                }
+            }
+        }
+
+
+        public int InvoiceItemCode {
+            get {
+                return _invoiceItemCode;
+            }
+            set {
+                if (value != _invoiceItemCode) {
+                    _invoiceItemCode = value;
+                    OnPropertyChanged("InvoiceItemCode");
                 }
             }
         }

@@ -95,6 +95,11 @@ namespace JewelryInvoicingSystem {
                     newInvoiceItem.Item = selectedItem;
                     //set the InvoiceItem to an observable array
                     mainViewModel.InvoiceItems.Add(newInvoiceItem);
+                    //store in database
+                    if (btnEditInvoice.Content.ToString() == "Done Editing") {
+                        ja.insertInvoiceItem(newInvoiceItem, mainViewModel.Invoice);
+
+                    }
                 }
             }
             catch
@@ -247,22 +252,50 @@ namespace JewelryInvoicingSystem {
             }
         }
 
+        /// <summary>
+        /// Handler for editing an invoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEditInvoice_Click(object sender, RoutedEventArgs e) {
-            //enable data fields for use
-            btnAddItem.IsEnabled = true;
-            btnDeleteInvoice.IsEnabled = false;
-            btnDeleteitem.IsEnabled = true;
-            btnNewInvoice.IsEnabled = false;
-            dtePck.IsEnabled = true;
-            btnCancel.IsEnabled = true;
-            btnSave.IsEnabled = true;
-            txtTotalCostCount.IsEnabled = true;
-            btnSearchInvoice.IsEnabled = true;
-            btnInventory.IsEnabled = true;
-            dataGrid.IsEnabled = true;
-            btnEditInvoice.IsEnabled = true;
+            if (btnEditInvoice.Content.ToString() == "Edit Invoice") {
+                //enable data fields for use
+                btnAddItem.IsEnabled = true;
+                btnDeleteInvoice.IsEnabled = false;
+                btnDeleteitem.IsEnabled = true;
+                btnNewInvoice.IsEnabled = false;
+                dtePck.IsEnabled = true;
+                btnCancel.IsEnabled = false;
+                btnSave.IsEnabled = false;
+                txtTotalCostCount.IsEnabled = true;
+                btnSearchInvoice.IsEnabled = false;
+                btnInventory.IsEnabled = false;
+                dataGrid.IsEnabled = true;
+                btnEditInvoice.IsEnabled = true;
+                btnEditInvoice.Content = "Done Editing";
+            } else {
+                btnAddItem.IsEnabled = false;
+                btnDeleteitem.IsEnabled = false;
+                btnNewInvoice.IsEnabled = true;
+                dtePck.IsEnabled = false;
+                btnCancel.IsEnabled = false;
+                btnDeleteInvoice.IsEnabled = true;
+                btnEditInvoice.IsEnabled = true;
+                btnSave.IsEnabled = false;
+                txtTotalCostCount.IsEnabled = false;
+                btnSearchInvoice.IsEnabled = true;
+                btnInventory.IsEnabled = true;
+                dataGrid.IsEnabled = false;
+                btnEditInvoice.Content = "Edit Invoice";
+            }
+
         }
 
+        /// <summary>
+        /// Delete an invoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDeleteInvoice_Click(object sender, RoutedEventArgs e) {
             //delete an invoice
             bool result = ja.deleteInvoice(mainViewModel.Invoice);
@@ -275,9 +308,16 @@ namespace JewelryInvoicingSystem {
             }
         }
 
+        /// <summary>
+        /// Delete an invoice item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDeleteItm_Click(object sender, RoutedEventArgs e) {
             InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            if (selectedItem != null || ja.deleteItem(selectedItem.Item.ItemCode))
+            if (selectedItem != null)
+                if (btnEditInvoice.Content.ToString() == "Done Editing")
+                    ja.deleteInvoiceItem(selectedItem);
                 mainViewModel.InvoiceItems.Remove(selectedItem);
         }
     }//end Main Window

@@ -56,41 +56,6 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         /// <summary>
-        /// SQL statement that pulls the item description and name; 
-        /// </summary>
-        /// <returns></returns>
-        public ObservableCollection<Item> selectItemNameAndDesc()
-        {
-            ObservableCollection<Item> col_Items;
-            string sSQL;    //Holds an SQL statement
-            int iRet = 0;   //Number of return values
-            DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT ItemDesc, ItemName, ItemCost FROM Item ";
-            col_Items = new ObservableCollection<Item>();
-            try
-            {
-                ds = db.ExecuteSQLStatement(sSQL, ref iRet);
-
-                //Creates Item objects based on the data pulled from the query
-                for (int i = 0; i < iRet; i++)
-                {
-                    Item item = new Item();
-
-                    item.ItemDesc = ds.Tables[0].Rows[i]["ItemDesc"].ToString();
-                    item.ItemName = ds.Tables[0].Rows[i]["ItemName"].ToString();
-                    item.ItemCost = int.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
-
-                    col_Items.Add(item);
-                }
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("{0} Exception caught.", e);
-            }
-            return col_Items;
-        }
-
-        /// <summary>
         /// Selects the next id for the invoice
         /// </summary>
         /// <returns></returns>
@@ -117,7 +82,7 @@ namespace JewelryInvoicingSystem.Model {
             string s2SQL;
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT ItemCode FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
+            sSQL = "SELECT ItemCode, InvoiceItemCode FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
             col_Items = new ObservableCollection<InvoiceItem>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -127,6 +92,7 @@ namespace JewelryInvoicingSystem.Model {
                     InvoiceItem invoiceItem = new InvoiceItem();
                     Item item = new Item();
 
+                    invoiceItem.InvoiceItemCode = int.Parse(ds.Tables[0].Rows[i]["InvoiceItemCode"].ToString());
                     int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
 
                     s2SQL = "SELECT ItemName, ItemCost, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
@@ -369,6 +335,27 @@ namespace JewelryInvoicingSystem.Model {
         }
 
         /// <summary>
+        /// SQL Statement that inserts an invoice item
+        /// </summary>
+        /// <returns>if success true, otherwise false</returns>
+        public bool insertInvoiceItem(InvoiceItem invoiceItem, Invoice invoice) {
+            string sSQL;    //Holds an SQL statement
+            int rowCount = 0;   //Number of rows Affected
+            sSQL = "INSERT INTO InvoiceItem (ItemCode, InvoiceCode) " +
+                   "VALUES(" + invoiceItem.Item.ItemCode + ", " + invoice.InvoiceCode + ");";
+            try {
+                rowCount = db.ExecuteNonQuery(sSQL);
+                //if insert unsuccessful
+                if (rowCount == 0)
+                    return false;
+            } catch (Exception e) {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            //if successful
+            return true;
+        }
+
+        /// <summary>
         /// SQL Statement that updates an invoice and its items
         /// </summary>
         /// <returns>true if successful or false if unsuccessful</returns>
@@ -438,6 +425,27 @@ namespace JewelryInvoicingSystem.Model {
             int rowCount = 0;   //Number of rows Affected
             sSQL = "DELETE FROM Invoice " +
                    "WHERE InvoiceCode = " + invoice.InvoiceCode + ";";
+            try {
+                rowCount = db.ExecuteNonQuery(sSQL);
+                //if insert unsuccessful
+                if (rowCount == 0)
+                    return false;
+            } catch (Exception e) {
+                Console.WriteLine("{0} Exception caught.", e);
+            }
+            //if successful
+            return true;
+        }
+
+        /// <summary>
+        /// SQL Statement that deletes an invoice
+        /// </summary>
+        /// <returns>true if successful or false if unsuccessful</returns>
+        public bool deleteInvoiceItem(InvoiceItem invoiceItem) {
+            string sSQL;    //Holds an SQL statement
+            int rowCount = 0;   //Number of rows Affected
+            sSQL = "DELETE FROM InvoiceItem " +
+                   "WHERE InvoiceItemCode = " + invoiceItem.InvoiceItemCode + ";";
             try {
                 rowCount = db.ExecuteNonQuery(sSQL);
                 //if insert unsuccessful
