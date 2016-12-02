@@ -203,51 +203,7 @@ namespace JewelryInvoicingSystem {
                 DefWindow defWin = new DefWindow(this);
                 defWin.ShowDialog();
                 populateItemsComboBox();
-                /*
-                if (defWin.ReturnItems != null)
-                {
-                    Items.Clear();
-                    Items.Add(defWin.ReturnItems);
-                    //data bind the ItemNames
-                    Binding b = new Binding("ItemCode");
-                    b.Mode = BindingMode.TwoWay;
-                    b.Source = defWin.ReturnItems;
-                    //cbxItem.SetBinding(ComboBox., b);
-                    //data bind the InvoiceDate
-                    Binding b2 = new Binding("ItemDesc");
-                    b2.Mode = BindingMode.TwoWay;
-                    b2.Source = defWin.ReturnItems;
-                    //dtePck.SetBinding(DatePicker.TextProperty, b2);
-                    //data bind the InvoiceItems
-                    Items.Clear();
-                    foreach (Item el in ja.selectItems())
-                    {
-                        Items.Add(el);
-                    }
-                    //set to ReadOnly
-                    dataGrid.IsReadOnly = true;
-                    //enable edit and delete
-                    btnDeleteInvoice.IsEnabled = true;
-                    btnEditInvoice.IsEnabled = true;
-
-
-
-
-
-                    if (defWin.ReturnItems != null)
-                    {
-                        Items.Clear();
-                        Items.Add(defWin.ReturnItems);
-                        foreach (Item el in ja.selectItems())
-                        {
-                            Items.Add(el);
-                        }
-                        //set to ReadOnly
-                        dataGrid.IsReadOnly = true;
-
-                    }
-                    
-                }*/
+                
             }
             catch
             {
@@ -373,6 +329,11 @@ namespace JewelryInvoicingSystem {
                 btnEditInvoice.IsEnabled = false;
                 btnDeleteInvoice.IsEnabled = false;
             }
+        }
+
+        private void txtTotalCostCount_TextChanged(object sender, TextChangedEventArgs e)
+        {
+
         }
     }//end Main Window
 }

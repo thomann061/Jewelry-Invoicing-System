@@ -68,7 +68,8 @@
                 Margin="337,18,0,0" 
                 VerticalAlignment="Top" 
                 Width="222" 
-                Height="40" Click="btnInventory_Click"/>
+                Height="40" Click="btnInventory_Click"
+                Visibility="Hidden"/>
 
         <Button x:Name="btnNewInvoice" 
                 Content="Create New Invoice" 
@@ -85,7 +86,9 @@
                 Margin="31,147,0,0" 
                 VerticalAlignment="Top" 
                 Width="165" 
-                Height="34" Click="btnSearchInvoice_Click"/>
+                Height="34"
+                Visibility="Hidden"
+                Click="btnSearchInvoice_Click"/>
 
         <Button x:Name="btnEditInvoice" 
                 Content="Edit Invoice" 
@@ -172,7 +175,7 @@
                Background="BlanchedAlmond" 
                Width="120" 
                Height="26"
-               IsReadOnly="True"/>
+               IsReadOnly="True" TextChanged="txtTotalCostCount_TextChanged"/>
 
         <Button x:Name="btnExit" 
                 Content="EXIT" 
@@ -182,6 +185,18 @@
                 VerticalAlignment="Top" 
                 Width="130" 
                 Height="34" Click="btnExit_Click"/>
+
+        <Menu x:Name="menu" 
+              HorizontalAlignment="Left" 
+              Height="30" 
+              VerticalAlignment="Top"
+              Width="296"
+            Style="{StaticResource redMenu}">
+            <Menu IsMainMenu="True"/>
+                <MenuItem Header="Update Inventory" Click="btnInventory_Click"  />
+            <MenuItem Header="Search Invoices" Click="btnSearchInvoice_Click"/>
+            
+        </Menu>
 
     </Grid>
 </Window>

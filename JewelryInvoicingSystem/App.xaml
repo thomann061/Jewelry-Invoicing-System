@@ -26,6 +26,7 @@
             <Setter Property="Background" Value="#BA0000"/>
             <Setter Property="Foreground" Value="#989994"/>
             <Setter Property="FontWeight" Value="Medium"/>
+            <Setter Property="FontSize" Value="14"/>
         </Style>
 
         <!--Beige Style for the text fields-->
