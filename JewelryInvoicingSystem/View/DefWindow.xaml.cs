@@ -230,13 +230,15 @@ namespace JewelryInvoicingSystem {
                     txtName.Text = selectedItem.ItemName;
                     txtItemDescription.Text = selectedItem.ItemDesc;
                     txtCost.Text = selectedItem.ItemCost.ToString();
+                    txtCost.Background = Brushes.BlanchedAlmond;
+                    txtItemDescription.Background = Brushes.BlanchedAlmond;
+                    txtName.Background = Brushes.BlanchedAlmond;
                 }
-
 
             }
             catch
             {
-                MessageBox.Show("Sorry, something went wrong!", "Error",
+                MessageBox.Show("Please Select an item to edit!", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }

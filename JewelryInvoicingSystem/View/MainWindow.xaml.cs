@@ -22,21 +22,90 @@ namespace JewelryInvoicingSystem {
     /// </summary>
     public partial class MainWindow : Window
     {
+
+        /// <summary>
+        /// Item Observable Collection
+        /// </summary>
         private ObservableCollection<Item> _items;
+
+        /// <summary>
+        /// Invoice Observable Collection
+        /// </summary>
         private ObservableCollection<Invoice> _invoices;
+
+        /// <summary>
+        /// Invoice Items Observable Collection
+        /// </summary>
         private ObservableCollection<InvoiceItem> _invoiceItems;
+
+        /// <summary>
+        /// JewelryAccess instance
+        /// </summary>
         private JewelryAccess ja;
+
+        /// <summary>
+        /// Keeps track of when the user is trying to delete
+        /// </summary>
         private bool isDeleting = false;
        
-
+        /// <summary>
+        /// Propert changed event handler
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
 
+        #region Properties
+
+        /// <summary>
+        /// On Property Changed
+        /// </summary>
+        /// <param name="propertyName"></param>
         protected virtual void OnPropertyChanged(string propertyName) {
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
         }
+        /// <summary>
+        /// Items Property
+        /// </summary>
+        public ObservableCollection<Item> Items
+        {
+            get { return _items; }
+            set { _items = value; }
+        }
+        /// <summary>
+        /// Invoices property
+        /// </summary>
+        public ObservableCollection<Invoice> Invoices
+        {
+            get { return _invoices; }
+            set
+            {
+                if (value != _invoices)
+                {
+                    _invoices = value;
+                    OnPropertyChanged("Invoices");
+                }
+            }
+        }
+        /// <summary>
+        /// Invoice Items Property
+        /// </summary>
+        public ObservableCollection<InvoiceItem> InvoiceItems
+        {
+            get { return _invoiceItems; }
+            set
+            {
+                if (value != _invoiceItems)
+                {
+                    _invoiceItems = value;
+                    OnPropertyChanged("InvoiceItems");
+                }
+            }
+        }
 
+        #endregion
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public MainWindow()
         {
             this.DataContext = this;
@@ -47,32 +116,14 @@ namespace JewelryInvoicingSystem {
             InitializeComponent();
             populateItemsComboBox();
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        public ObservableCollection<Item> Items {
-            get { return _items; }
-            set { _items = value; }
-        }
+        #region Methods
 
-        public ObservableCollection<Invoice> Invoices {
-            get { return _invoices; }
-            set {
-                if (value != _invoices) {
-                    _invoices = value;
-                    OnPropertyChanged("Invoices");
-                }
-            }
-        }
-
-        public ObservableCollection<InvoiceItem> InvoiceItems {
-            get { return _invoiceItems; }
-            set {
-                if (value != _invoiceItems) {
-                    _invoiceItems = value;
-                    OnPropertyChanged("InvoiceItems");
-                }
-            }
-        }
-
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Populates the combo boxes
+        /// </summary>
         private void populateItemsComboBox() {
             Items = ja.selectItems();
             cbxItem.ItemsSource = Items;
@@ -163,8 +214,9 @@ namespace JewelryInvoicingSystem {
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
-        /// Adds up the total cost of the entire invoice
+        /// Keeps track of the total cost of the entire invoice
         /// </summary>
         private void totalRunningCost()
         {
@@ -206,9 +258,7 @@ namespace JewelryInvoicingSystem {
                     lblRunningTotal.Content = totalCost;
 
                     isDeleting = false;
-
                 }
-       
             }
             catch
             {
@@ -319,7 +369,8 @@ namespace JewelryInvoicingSystem {
                         btnSearchInvoice.IsEnabled = true;
                         btnInventory.IsEnabled = true;
                         dataGrid.IsEnabled = false;
-
+                        cbxItem.IsEnabled = false;
+                        btnDeleteitem.IsEnabled = false;
                     }
                 }
             }
@@ -356,7 +407,6 @@ namespace JewelryInvoicingSystem {
                 txtTotalCostCount.Text = "";
                 lblInvoice.Content = "";
            }
-
             catch
             {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
@@ -383,43 +433,109 @@ namespace JewelryInvoicingSystem {
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Allows the user to edit an invoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnEditInvoice_Click(object sender, RoutedEventArgs e) {
-            //enable data fields for use
-            btnAddItem.IsEnabled = true;
-            btnNewInvoice.IsEnabled = false;
-            dtePck.IsEnabled = true;
-            btnCancel.IsEnabled = true;
-            btnSave.IsEnabled = true;
-            txtTotalCostCount.IsEnabled = true;
-            btnSearchInvoice.IsEnabled = true;
-            btnInventory.IsEnabled = true;
-            dataGrid.IsEnabled = true;
-            btnEditInvoice.IsEnabled = true;
-        }
 
-        private void btnDeleteInvoice_Click(object sender, RoutedEventArgs e) {
-            //delete an invoice
-            bool result = ja.deleteInvoice(Invoices);
-            if(result) {
-                Invoices.Clear();
-                InvoiceItems.Clear();
+            try
+            {
                 //enable data fields for use
-                btnEditInvoice.IsEnabled = false;
-                btnDeleteInvoice.IsEnabled = false;
+                btnAddItem.IsEnabled = true;
+                btnNewInvoice.IsEnabled = false;
+                dtePck.IsEnabled = true;
+                btnCancel.IsEnabled = true;
+                btnSave.IsEnabled = true;
+                txtTotalCostCount.IsEnabled = true;
+                btnSearchInvoice.IsEnabled = true;
+                btnInventory.IsEnabled = true;
+                dataGrid.IsEnabled = true;
+                btnEditInvoice.IsEnabled = true;
+                btnDeleteitem.IsEnabled = true;
+                cbxItem.IsEnabled = true;
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
-       
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Deletes the current invoice
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void btnDeleteInvoice_Click(object sender, RoutedEventArgs e) {
+
+            try
+            {
+                //delete an invoice
+                bool result = ja.deleteInvoice(Invoices);
+                if (result)
+                {
+                    Invoices.Clear();
+                    InvoiceItems.Clear();
+                    //enable data fields for use
+                    btnEditInvoice.IsEnabled = false;
+                    btnDeleteInvoice.IsEnabled = false;
+                    lblInvoice.Content = "";
+                    dtePck.Text = "";
+                    txtTotalCostCount.Text = "";
+                    lblRunningTotal.Content = "";
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
+         }
+
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Don't think this is really used but everything crashes whenever I try to delete it. 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void txtTotalCostCount_TextChanged(object sender, TextChangedEventArgs e)
         {
-
+            try
+            {
+                //nothing
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Selects an item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void itemSelected(object sender, SelectionChangedEventArgs e) {
-            Item selectedItem = (Item)cbxItem.SelectedItem;
-            txtTotalCostCount.Text = selectedItem.ItemCost.ToString();
+
+            try
+            {
+                Item selectedItem = (Item)cbxItem.SelectedItem;
+                txtTotalCostCount.Text = selectedItem.ItemCost.ToString();
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Deletes an item from the invoice
         /// </summary>
@@ -427,13 +543,21 @@ namespace JewelryInvoicingSystem {
         /// <param name="e"></param>
         private void btnDeleteItm_Click(object sender, RoutedEventArgs e)
         {
-            InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            isDeleting = true;
-            totalRunningCost();
-            InvoiceItems.Remove(selectedItem);
-
-            
+            try
+            {
+                InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
+                isDeleting = true;
+                totalRunningCost();
+                InvoiceItems.Remove(selectedItem);
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
+
+        #endregion
 
     }//end Main Window
 }
