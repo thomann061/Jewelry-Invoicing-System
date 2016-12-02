@@ -30,9 +30,9 @@
                   AutoGenerateColumns="False"
                   x:Name="dataGrid" 
                   HorizontalAlignment="Left" 
-                  Margin="23,327,0,0" 
+                  Margin="23,332,0,0" 
                   VerticalAlignment="Top" 
-                  Height="184" 
+                  Height="179" 
                   Width="536">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Item" IsReadOnly="True" Binding="{Binding Item.ItemName}"/>
@@ -193,9 +193,9 @@
               Width="296"
             Style="{StaticResource redMenu}">
             <Menu IsMainMenu="True"/>
-                <MenuItem Header="Update Inventory" Click="btnInventory_Click"  />
+            <MenuItem Header="Update Inventory" Click="btnInventory_Click"  />
             <MenuItem Header="Search Invoices" Click="btnSearchInvoice_Click"/>
-            
+
         </Menu>
         <Button x:Name="btnDeleteitem" 
             Content="Delete Item" Style="{StaticResource grayButtons}" 
@@ -205,6 +205,19 @@
             Width="111" 
             Height="27" 
             IsEnabled="False" Click="btnDeleteItm_Click"/>
+
+        <Label x:Name="lblRunningTotal" 
+               Content="" 
+               HorizontalAlignment="Left" 
+               Margin="346,301,0,0" 
+               Background="BlanchedAlmond"
+               VerticalAlignment="Top" Width="120"/>
+        
+        <Label x:Name="label" 
+               Content="Invoice Total:      $" 
+               HorizontalAlignment="Left" 
+               Margin="237,301,0,0" 
+               VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

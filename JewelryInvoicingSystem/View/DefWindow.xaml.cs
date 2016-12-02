@@ -92,8 +92,6 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                
-
 
                 //enable/disable fields for use
                 txtCost.IsEnabled = true;
@@ -134,37 +132,7 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                //we probably dont need this button
-                //if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
-                //{
-
-                    //Create a new item
-                    //Item newItem = new Item();
-
-                    //Extract the text from the text fields and set them equal to a new Item.
-                    //newItem.ItemName = txtName.Text.ToString();
-                    //newItem.ItemDesc = txtItemDescription.Text.ToString();
-                    //newItem.ItemCost = int.Parse(txtCost.Text.ToString());
-
-
-                    //set the InvoiceItem to an observable array
-                    //Items.Add(newItem);
-                    //data bind it
-                    //dtaGrdInventory.ItemsSource = Items;
-
-                    //insert the item into the database
-                    //ja.updateAllItems(Items);
-
-
-                    //enable fields
-                    //txtName.Text = txtCost.Text = txtItemDescription.Text = "";
-                    //btnSaveAndClose.IsEnabled = true;
-
-                    //ReturnItems = newItem; 
-                //}
                 
-
-                //Closes the form
                 Close();
 
             }
@@ -245,10 +213,6 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                ///TODO: POPULATE THE NAME, COST, AND DESCRIPTION FIELDS WITH THE ITEM THE USER HAS SELECTED
-                ///TO BE EDITED IN THE DATAGRID
-                
-
                 //get first selected item
                 selectedItem = (Item) dtaGrdInventory.SelectedItems[0];
                 selectedIndex = dtaGrdInventory.SelectedIndex;
@@ -277,7 +241,12 @@ namespace JewelryInvoicingSystem {
             }
         }
 
-
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dtaGrdInventory_CurrentCellChanged(object sender, EventArgs e)
         {
             try
@@ -377,10 +346,21 @@ namespace JewelryInvoicingSystem {
            
         }
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Deletes an item
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
+                //does item exist in other invoices?
+                //Select all invoicesITEMS and check out their item codes
+                //Compare them against the selected item codes
+                InvoiceItem invoice = new InvoiceItem();
+
                 //get first selected item
                 selectedItem = (Item)dtaGrdInventory.SelectedItems[0];
                 selectedIndex = dtaGrdInventory.SelectedIndex;
@@ -392,6 +372,15 @@ namespace JewelryInvoicingSystem {
                 {
                     Items.RemoveAt(selectedIndex);
                 }
+
+                //////////////////////////////////////////////////////////////////////////////////////////////////
+
+                else if (itemId == invoice.ItemCode)
+                {
+                    MessageBox.Show("This item is on another invoice. You cannot delete it", "Error", MessageBoxButton.OK, MessageBoxImage.Hand);
+                }
+
+
             }
             catch
             {
