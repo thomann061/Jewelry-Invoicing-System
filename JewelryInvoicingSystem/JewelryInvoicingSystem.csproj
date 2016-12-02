@@ -60,6 +60,9 @@
     <Compile Include="Model\InvoiceItem.cs" />
     <Compile Include="Model\JewelryAccess.cs" />
     <Compile Include="Model\Item.cs" />
+    <Compile Include="Model\ObservableObject.cs" />
+    <Compile Include="ViewModel\SearchViewModel.cs" />
+    <Compile Include="ViewModel\MainViewModel.cs" />
     <Compile Include="View\DefWindow.xaml.cs">
       <DependentUpon>DefWindow.xaml</DependentUpon>
     </Compile>

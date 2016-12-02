@@ -25,7 +25,7 @@ namespace JewelryInvoicingSystem.Model {
         /// <summary>
         /// Item Cost
         /// </summary>
-        private int _itemCost;
+        private double _itemCost;
 
         /// <summary>
         /// Constructor for an item
@@ -96,7 +96,7 @@ namespace JewelryInvoicingSystem.Model {
         }
 
 
-        public int ItemCost
+        public double ItemCost
         {
             get
             {

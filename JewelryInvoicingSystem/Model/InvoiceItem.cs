@@ -8,17 +8,9 @@ using System.Threading.Tasks;
 namespace JewelryInvoicingSystem.Model {
     public class InvoiceItem : INotifyPropertyChanged {
         /// <summary>
-        /// Item Cost
-        /// </summary>
-        private double _itemCost;
-        /// <summary>
         /// Item
         /// </summary>
         private Item _item;
-        /// <summary>
-        /// Item Code
-        /// </summary>
-        private int _itemCode;
 
         public event PropertyChangedEventHandler PropertyChanged;
 
@@ -26,19 +18,6 @@ namespace JewelryInvoicingSystem.Model {
             var handler = PropertyChanged;
             if (handler != null)
                 handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-
-        public double ItemCost {
-            get {
-                return _itemCost;
-            }
-            set {
-                if (value != _itemCost) {
-                    _itemCost = value;
-                    OnPropertyChanged("ItemCost");
-                }
-            }
         }
 
         public Item Item {
@@ -49,22 +28,6 @@ namespace JewelryInvoicingSystem.Model {
                 if (value != _item) {
                     _item = value;
                     OnPropertyChanged("Item");
-                }
-            }
-        }
-
-        public int ItemCode
-        {
-            get
-            {
-                return _itemCode;
-            }
-            set
-            {
-                if (value != _itemCode)
-                {
-                    _itemCode = value;
-                    OnPropertyChanged("ItemCode");
                 }
             }
         }

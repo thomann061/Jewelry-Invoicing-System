@@ -97,10 +97,14 @@ namespace JewelryInvoicingSystem.Model {
         public ObservableCollection<InvoiceItem> selectItemsFromInvoice(int id) {
             ObservableCollection<InvoiceItem> col_Items;
             string sSQL;    //Holds an SQL statement
-            string s2SQL;
+            //string s2SQL;
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT ItemCode, InvoiceCode, ItemCost FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
+            sSQL = "SELECT InvoiceItem.ItemCode, InvoiceItem.InvoiceCode, Item.ItemName, Item.ItemCost, Item.ItemDesc " +
+                   "FROM (Item " +
+                   "INNER JOIN InvoiceItem " +
+                   "ON InvoiceItem.ItemCode = Item.ItemCode) " +
+                   "WHERE InvoiceItem.InvoiceCode = " + id + ";";
             col_Items = new ObservableCollection<InvoiceItem>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -110,17 +114,17 @@ namespace JewelryInvoicingSystem.Model {
                     InvoiceItem invoiceItem = new InvoiceItem();
                     Item item = new Item();
 
-                    invoiceItem.ItemCost = double.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
-                    int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
+                    //invoiceItem.ItemCost = double.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
+                    //int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
 
-                    s2SQL = "SELECT ItemName, ItemCost, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
-                    int ret = 0;
-                    DataSet ds2 = db.ExecuteSQLStatement(s2SQL, ref ret);
+                    //s2SQL = "SELECT ItemName, ItemCost, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
+                    //int ret = 0;
+                    //DataSet ds2 = db.ExecuteSQLStatement(s2SQL, ref ret);
 
-                    item.ItemName = ds2.Tables[0].Rows[0]["ItemName"].ToString();
-                    item.ItemDesc = ds2.Tables[0].Rows[0]["ItemDesc"].ToString();
-                    item.ItemCost = int.Parse(ds2.Tables[0].Rows[0]["ItemCost"].ToString());
-                    item.ItemCode = itemCode;
+                    item.ItemName = ds.Tables[0].Rows[0]["ItemName"].ToString();
+                    item.ItemDesc = ds.Tables[0].Rows[0]["ItemDesc"].ToString();
+                    item.ItemCost = int.Parse(ds.Tables[0].Rows[0]["ItemCost"].ToString());
+                    item.ItemCode = int.Parse(ds.Tables[0].Rows[0]["ItemCode"].ToString()); ;
 
                     invoiceItem.Item = item;
 
@@ -314,8 +318,7 @@ namespace JewelryInvoicingSystem.Model {
             string idSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
             int newId = 0;
-            sSQL = "INSERT INTO Invoice (InvoiceDate) " +
-                   "VALUES('" + invoice.InvoiceDate + "');";
+            sSQL = "INSERT INTO Invoice DEFAULT VALUES; ";
             idSQL = "SELECT TOP 1 InvoiceCode FROM Invoice ORDER BY InvoiceCode DESC;";
             try {
                 rowCount = db.ExecuteNonQuery(sSQL);
@@ -360,9 +363,7 @@ namespace JewelryInvoicingSystem.Model {
         /// SQL Statement that updates an invoice and its items
         /// </summary>
         /// <returns>true if successful or false if unsuccessful</returns>
-        public bool updateInvoiceWithItems(ObservableCollection<Invoice> invoices, ObservableCollection<InvoiceItem> invoiceItems) {
-            //there should only be one invoice in the array
-            Invoice invoice = invoices.ElementAt(0);
+        public bool updateInvoiceWithItems(Invoice invoice, ObservableCollection<InvoiceItem> invoiceItems) {
             string sSQL;    //Holds an SQL statement
             string s2SQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
@@ -377,8 +378,8 @@ namespace JewelryInvoicingSystem.Model {
 
                 //insert items
                 foreach (InvoiceItem el in invoiceItems) {
-                    s2SQL = "INSERT INTO InvoiceItem (ItemCode, InvoiceCode, ItemCost)" +
-                            "VALUES(" + el.Item.ItemCode + ", " + invoice.InvoiceCode + ", " + el.ItemCost + ");";
+                    s2SQL = "INSERT INTO InvoiceItem (ItemCode, InvoiceCode)" +
+                            "VALUES(" + el.Item.ItemCode + ", " + invoice.InvoiceCode + ");";
                     rowCount = db.ExecuteNonQuery(s2SQL);
                     //if insert unsuccessful
                     if (rowCount == 0)
@@ -419,9 +420,7 @@ namespace JewelryInvoicingSystem.Model {
         /// SQL Statement that deletes an invoice
         /// </summary>
         /// <returns>true if successful or false if unsuccessful</returns>
-        public bool deleteInvoice(ObservableCollection<Invoice> invoices) {
-            //only ever one invoice
-            Invoice invoice = invoices.ElementAt(0);
+        public bool deleteInvoice(Invoice invoice) {
             string sSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
             sSQL = "DELETE FROM Invoice " +
