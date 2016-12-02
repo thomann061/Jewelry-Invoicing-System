@@ -207,11 +207,12 @@
             IsEnabled="False" Click="btnDeleteItm_Click"/>
 
         <Label x:Name="lblRunningTotal" 
-               Content="" 
+               Content="{Binding ItemCost}" 
                HorizontalAlignment="Left" 
                Margin="346,301,0,0" 
                Background="BlanchedAlmond"
-               VerticalAlignment="Top" Width="120"/>
+               
+               VerticalAlignment="Top" Width="120" Height="26"/>
         
         <Label x:Name="label" 
                Content="Invoice Total:      $" 
