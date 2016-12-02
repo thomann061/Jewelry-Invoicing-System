@@ -258,6 +258,7 @@ namespace JewelryInvoicingSystem {
         private void btnEditInvoice_Click(object sender, RoutedEventArgs e) {
             //enable data fields for use
             btnAddItem.IsEnabled = true;
+            btnDeleteitem.IsEnabled = true;
             btnNewInvoice.IsEnabled = false;
             dtePck.IsEnabled = true;
             btnCancel.IsEnabled = true;
@@ -281,19 +282,10 @@ namespace JewelryInvoicingSystem {
             }
         }
 
-        private void txtTotalCostCount_TextChanged(object sender, TextChangedEventArgs e)
-        {
-
-        }
-
-        private void itemSelected(object sender, SelectionChangedEventArgs e) {
-            Item selectedItem = (Item)cbxItem.SelectedItem;
-            txtTotalCostCount.Text = selectedItem.ItemCost.ToString();
-        }
-
         private void btnDeleteItm_Click(object sender, RoutedEventArgs e) {
             InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            mainViewModel.InvoiceItems.Remove(selectedItem);
+            if(ja.deleteItem(selectedItem.Item.ItemCode))
+                mainViewModel.InvoiceItems.Remove(selectedItem);
         }
     }//end Main Window
 }

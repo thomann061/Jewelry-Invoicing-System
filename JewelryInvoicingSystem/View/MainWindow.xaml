@@ -32,7 +32,7 @@
                   HorizontalAlignment="Left" 
                   Margin="23,327,0,0" 
                   VerticalAlignment="Top" 
-                  Height="184" 
+                  Height="155" 
                   Width="536">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Item" IsReadOnly="True" Binding="{Binding Item.ItemName}"/>
@@ -134,7 +134,7 @@
                   Margin="346,180,0,0" 
                   VerticalAlignment="Top" 
                   Width="120" 
-                  Height="26" SelectionChanged="itemSelected" />
+                  Height="26" />
 
         <Label x:Name="lblCost" 
                Content="Cost:" 
@@ -169,15 +169,17 @@
                     Width="120"
                     IsEnabled="False"/>
 
-        <TextBox x:Name="txtTotalCostCount" 
-               Text="" 
+        <TextBox
+               DataContext="{Binding SelectedItem, ElementName=cbxItem}"
+               Text="{Binding ItemCost}" 
+               x:Name="txtTotalCostCount" 
                HorizontalAlignment="Left" 
                Margin="346,222,0,0" 
                VerticalAlignment="Top"
                Background="BlanchedAlmond" 
                Width="120" 
                Height="26"
-               IsReadOnly="True" TextChanged="txtTotalCostCount_TextChanged"/>
+               IsReadOnly="True"/>
 
         <Button x:Name="btnExit" 
                 Content="EXIT" 
@@ -207,6 +209,22 @@
             Width="111" 
             Height="27" 
             IsEnabled="False" Click="btnDeleteItm_Click"/>
+        <Label 
+            
+            x:Name="txtInvoiceTotal" 
+            Content="" 
+            HorizontalAlignment="Left" 
+            Margin="92,487,0,0" 
+            VerticalAlignment="Top"
+            Background="BlanchedAlmond" 
+            Width="120" 
+            Height="26"
+            />
+        <Label x:Name="lblTotal" 
+            Content="Total:" 
+            HorizontalAlignment="Left" 
+            Margin="51,487,0,0" 
+            VerticalAlignment="Top"/>
 
     </Grid>
 </Window>
