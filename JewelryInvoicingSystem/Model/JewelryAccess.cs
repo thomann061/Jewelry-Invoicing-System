@@ -97,14 +97,10 @@ namespace JewelryInvoicingSystem.Model {
         public ObservableCollection<InvoiceItem> selectItemsFromInvoice(int id) {
             ObservableCollection<InvoiceItem> col_Items;
             string sSQL;    //Holds an SQL statement
-            //string s2SQL;
+            string s2SQL;
             int iRet = 0;   //Number of return values
             DataSet ds = new DataSet(); //Holds the return values
-            sSQL = "SELECT InvoiceItem.ItemCode, InvoiceItem.InvoiceCode, Item.ItemName, Item.ItemCost, Item.ItemDesc " +
-                   "FROM (Item " +
-                   "INNER JOIN InvoiceItem " +
-                   "ON InvoiceItem.ItemCode = Item.ItemCode) " +
-                   "WHERE InvoiceItem.InvoiceCode = " + id + ";";
+            sSQL = "SELECT ItemCode FROM InvoiceItem WHERE InvoiceCode = " + id + ";";
             col_Items = new ObservableCollection<InvoiceItem>();
             try {
                 ds = db.ExecuteSQLStatement(sSQL, ref iRet);
@@ -114,17 +110,16 @@ namespace JewelryInvoicingSystem.Model {
                     InvoiceItem invoiceItem = new InvoiceItem();
                     Item item = new Item();
 
-                    //invoiceItem.ItemCost = double.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
-                    //int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
+                    int itemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
 
-                    //s2SQL = "SELECT ItemName, ItemCost, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
-                    //int ret = 0;
-                    //DataSet ds2 = db.ExecuteSQLStatement(s2SQL, ref ret);
+                    s2SQL = "SELECT ItemName, ItemCost, ItemDesc FROM Item WHERE ItemCode = " + itemCode + ";";
+                    int ret = 0;
+                    DataSet ds2 = db.ExecuteSQLStatement(s2SQL, ref ret);
 
-                    item.ItemName = ds.Tables[0].Rows[0]["ItemName"].ToString();
-                    item.ItemDesc = ds.Tables[0].Rows[0]["ItemDesc"].ToString();
-                    item.ItemCost = int.Parse(ds.Tables[0].Rows[0]["ItemCost"].ToString());
-                    item.ItemCode = int.Parse(ds.Tables[0].Rows[0]["ItemCode"].ToString()); ;
+                    item.ItemName = ds2.Tables[0].Rows[0]["ItemName"].ToString();
+                    item.ItemDesc = ds2.Tables[0].Rows[0]["ItemDesc"].ToString();
+                    item.ItemCost = double.Parse(ds2.Tables[0].Rows[0]["ItemCost"].ToString());
+                    item.ItemCode = itemCode;
 
                     invoiceItem.Item = item;
 
