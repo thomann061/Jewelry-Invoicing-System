@@ -170,22 +170,19 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                //if the invoice is empty, then we have nothing to add
-                //if something is added, lets check for other items in the datagrid. If there is something
-                //we'll add it together
-                //if something is deleted, we will need to subtract the total from the total running cost
                 int cost = 0;
                 int totalCost = 0;
 
-
+                //check for values in the data grid
                 if (dataGrid == null)
                 {
                     lblRunningTotal.Content = "";
                 }
-                else if (!isDeleting)
+                else if (!isDeleting) //if we aren't deleting
                 {
                     cost = 0;
                     totalCost = 0;
+                    //run through invoice items and add them together
                     for (int i = 0; i < InvoiceItems.Count; i++)
                     {
                         cost = int.Parse(InvoiceItems[i].ItemCost.ToString());
@@ -193,41 +190,25 @@ namespace JewelryInvoicingSystem {
                         lblRunningTotal.Content = totalCost;
                     }
                 }
-               else if(isDeleting)
+               else if(isDeleting) //and if we are deleting
                 {
+                    //total cost from the label
                     totalCost = int.Parse(lblRunningTotal.Content.ToString());
-                    //get cost for the selected item and subtract it from the total.
+
+                    //grab our selection
                     InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
+
+                    //grab the cost of the selected item and subtract it from the total cost
                     cost = int.Parse(selectedItem.ItemCost.ToString());
-
-
                     totalCost -= cost;
+
+                    //Display results
+                    lblRunningTotal.Content = totalCost;
+
+                    isDeleting = false;
+
                 }
-                /*
-         if (selectedItem != null) {
-            selectedItem.ItemName = txtName.Text.ToString();
-            selectedItem.ItemDesc = txtItemDescription.Text.ToString();
-            selectedItem.ItemCost = int.Parse(txtCost.Text.ToString());
-            for (int i = 0; i < Items.Count; i++) {
-                if (Items[i].ItemCode == selectedItem.ItemCode)
-                    Items[i] = selectedItem;
-            }
-            ja.updateItem(selectedItem); //update in database
-            selectedItem = null; 
-
-
-            InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            
-            InvoiceItems.Remove(selectedItem);
-
-            isDeleting = true;
-            totalRunningCost();
-
-
-
-
-         */
-
+       
             }
             catch
             {
@@ -447,11 +428,11 @@ namespace JewelryInvoicingSystem {
         private void btnDeleteItm_Click(object sender, RoutedEventArgs e)
         {
             InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            
-            InvoiceItems.Remove(selectedItem);
-
             isDeleting = true;
             totalRunningCost();
+            InvoiceItems.Remove(selectedItem);
+
+            
         }
 
     }//end Main Window
