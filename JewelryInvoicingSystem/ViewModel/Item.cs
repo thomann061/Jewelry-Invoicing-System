@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JewelryInvoicingSystem.Model {
-    public class Item : INotifyPropertyChanged {
+    public class Item : ObservableObject {
         /// <summary>
         /// Item identifier
         /// </summary>
@@ -25,7 +25,7 @@ namespace JewelryInvoicingSystem.Model {
         /// <summary>
         /// Item Cost
         /// </summary>
-        private int _itemCost;
+        private double _itemCost;
 
         /// <summary>
         /// Constructor for an item
@@ -44,14 +44,6 @@ namespace JewelryInvoicingSystem.Model {
             } catch (Exception) {
                 throw;
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName) {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
         //getters and setters
@@ -96,7 +88,7 @@ namespace JewelryInvoicingSystem.Model {
         }
 
 
-        public int ItemCost
+        public double ItemCost
         {
             get
             {

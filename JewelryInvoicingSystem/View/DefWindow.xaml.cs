@@ -1,4 +1,5 @@
 ﻿using JewelryInvoicingSystem.Model;
+using JewelryInvoicingSystem.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -22,63 +23,23 @@ namespace JewelryInvoicingSystem {
     /// </summary>
     public partial class DefWindow : Window {
         private MainWindow mainWindow;
-        private ObservableCollection<Item> _items;
+        private DefViewModel defViewModel;
         private JewelryAccess ja;
         private Item selectedItem;
         private int selectedIndex;
-        private Item _returnItems;
-        DataAccess db = new DataAccess();
-        DataSet ds = new DataSet();
-
-        public Item ReturnItems
-        {
-            get { return _returnItems; }
-            set { _returnItems = value; }
-        }
-
-        public ObservableCollection<Item> Items {
-            get { return _items; }
-            set {
-                if (value != _items) {
-                    _items = value;
-                    OnPropertyChanged("Items");
-                }
-            }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName) {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
-        }
-
 
         public DefWindow(MainWindow mainWindow)
         {
-            this.DataContext = this;
+            InitializeComponent();
+            defViewModel = new DefViewModel();
+            this.DataContext = defViewModel;
             this.mainWindow = mainWindow;
             ja = new JewelryAccess();
-            //Invoices = new ObservableCollection<Invoice>();
-            //InvoiceItems = new ObservableCollection<InvoiceItem>();
-
 
             //select all invoices
-            Items = new ObservableCollection<Item>();
-            
-            InitializeComponent();
-            Items = ja.selectItems();
-            dtaGrdInventory.ItemsSource = Items;
-            dtaGrdInventory.IsReadOnly = false;
-
-
-        }
-
-        private void populateItemsComboBox()
-        {
-            Items = ja.selectItems();
-            //cbxItem.ItemsSource = Items;
+            defViewModel.Items = new ObservableCollection<Item>();
+            //set to the view
+            defViewModel.Items = ja.selectItems();
         }
 
 
@@ -92,7 +53,6 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-
                 //enable/disable fields for use
                 txtCost.IsEnabled = true;
                 txtName.IsEnabled = true;
@@ -107,11 +67,6 @@ namespace JewelryInvoicingSystem {
 
                 btnEdit.IsEnabled = false;
                 btnDelete.IsEnabled = false;
-
-
-                
-                
-
             }
             catch
             {
@@ -132,7 +87,7 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                
+                //Closes the form
                 Close();
 
             }
@@ -213,6 +168,10 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
+                ///TODO: POPULATE THE NAME, COST, AND DESCRIPTION FIELDS WITH THE ITEM THE USER HAS SELECTED
+                ///TO BE EDITED IN THE DATAGRID
+                
+
                 //get first selected item
                 selectedItem = (Item) dtaGrdInventory.SelectedItems[0];
                 selectedIndex = dtaGrdInventory.SelectedIndex;
@@ -230,53 +189,11 @@ namespace JewelryInvoicingSystem {
                     txtName.Text = selectedItem.ItemName;
                     txtItemDescription.Text = selectedItem.ItemDesc;
                     txtCost.Text = selectedItem.ItemCost.ToString();
-                    txtCost.Background = Brushes.BlanchedAlmond;
-                    txtItemDescription.Background = Brushes.BlanchedAlmond;
-                    txtName.Background = Brushes.BlanchedAlmond;
                 }
+
 
             }
             catch
-            {
-                MessageBox.Show("Please Select an item to edit!", "Error",
-                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-        }
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void dtaGrdInventory_CurrentCellChanged(object sender, EventArgs e)
-        {
-            try
-            {
-                //Make sure the current row is not null
-                if (dtaGrdInventory.SelectedItem != null)
-                {
-
-                    //Check to see if the user is deleting a row
-                    //if (IsDeleting == false)
-                    //{
-                    //Gives the current cell's row number
-                    int iRowNum = int.Parse(dtaGrdInventory.SelectedCells.ToString());
-                        //or
-                        //iRowNum = dtaGrdInventory.CurrentRow.Index;
-
-                        //Make sure a valid row is selected
-                        if(iRowNum < ds.Tables[0].Rows.Count)
-                        {
-                            //Put the highlighted row's data in the textboxes
-                            txtName.Text = ds.Tables[0].Rows[iRowNum][1].ToString();
-                            txtCost.Text = ds.Tables[0].Rows[iRowNum].ItemArray[2].ToString();
-                            txtItemDescription.Text = ds.Tables[0].Rows[iRowNum].ItemArray[3].ToString();
-                        }
-                    //}
-                }
-            }
-            catch (Exception)
             {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
@@ -297,9 +214,9 @@ namespace JewelryInvoicingSystem {
                     selectedItem.ItemName = txtName.Text.ToString();
                     selectedItem.ItemDesc = txtItemDescription.Text.ToString();
                     selectedItem.ItemCost = int.Parse(txtCost.Text.ToString());
-                    for (int i = 0; i < Items.Count; i++) {
-                        if (Items[i].ItemCode == selectedItem.ItemCode)
-                            Items[i] = selectedItem;
+                    for (int i = 0; i < defViewModel.Items.Count; i++) {
+                        if (defViewModel.Items[i].ItemCode == selectedItem.ItemCode)
+                            defViewModel.Items[i] = selectedItem;
                     }
                     ja.updateItem(selectedItem); //update in database
                     selectedItem = null;
@@ -317,15 +234,12 @@ namespace JewelryInvoicingSystem {
 
                     bool result = ja.insertItem(newItem);
                     if(result)
-                        Items.Add(newItem);
+                        defViewModel.Items.Add(newItem);
                     //set the InvoiceItem to an observable array
 
                     //data bind it
                     //dtaGrdInventory.ItemsSource = Items;
 
-                    
-
-                    ReturnItems = newItem;
                 }
                 else
                 {
@@ -348,21 +262,10 @@ namespace JewelryInvoicingSystem {
            
         }
 
-        //////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Deletes an item
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             try
             {
-                //does item exist in other invoices?
-                //Select all invoicesITEMS and check out their item codes
-                //Compare them against the selected item codes
-                InvoiceItem invoice = new InvoiceItem();
-
                 //get first selected item
                 selectedItem = (Item)dtaGrdInventory.SelectedItems[0];
                 selectedIndex = dtaGrdInventory.SelectedIndex;
@@ -372,17 +275,8 @@ namespace JewelryInvoicingSystem {
                 bool result = ja.deleteItem(itemId);
                 if (result)
                 {
-                    Items.RemoveAt(selectedIndex);
+                    defViewModel.Items.RemoveAt(selectedIndex);
                 }
-
-                //////////////////////////////////////////////////////////////////////////////////////////////////
-
-                else if (itemId == invoice.ItemCode)
-                {
-                    MessageBox.Show("This item is on another invoice. You cannot delete it", "Error", MessageBoxButton.OK, MessageBoxImage.Hand);
-                }
-
-
             }
             catch
             {

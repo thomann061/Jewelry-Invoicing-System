@@ -1,4 +1,5 @@
 ﻿using JewelryInvoicingSystem.Model;
+using JewelryInvoicingSystem.ViewModel;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -21,7 +22,7 @@ namespace JewelryInvoicingSystem {
     public partial class SearchWindow : Window {
         private MainWindow mainWindow;
         private JewelryAccess ja;
-        private ObservableCollection<Invoice> _invoices;
+        private SearchViewModel searchViewModel;
         private Invoice _returnInvoice;
 
         public Invoice ReturnInvoice {
@@ -32,18 +33,15 @@ namespace JewelryInvoicingSystem {
         public SearchWindow(MainWindow mainWindow)
         {
             InitializeComponent();
+            searchViewModel = new SearchViewModel();
+            this.DataContext = searchViewModel;
             this.mainWindow = mainWindow;
             //load in all invoices to the combobox
             ja = new JewelryAccess();
             //select all invoices
-            ObservableCollection<Invoice> initialInvoices = ja.selectInvoices();
-            //data bind two combo boxes
-            cbxCriteria1.ItemsSource = initialInvoices;
-            cbxCriteria3.ItemsSource = initialInvoices;
-            cbxCriteria3.DisplayMemberPath = "InvoiceTotal"; //set the InvoiceTotal to display
-            //data bind the main search screen with all invoices and set it to read only
-            dtaGrdsInvoices.ItemsSource = initialInvoices;
-            dtaGrdsInvoices.IsReadOnly = true;
+            ObservableCollection<Invoice> invoices = ja.selectInvoices();
+            searchViewModel.Invoices = invoices;
+            searchViewModel.ComboBoxInvoices = invoices;
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -93,27 +91,21 @@ namespace JewelryInvoicingSystem {
             //get the selected invoice
             Invoice invoice = (Invoice)cbxCriteria1.SelectedItem;
             //query the database with the invoice id and put the results into an observable array
-            _invoices = ja.selectInvoiceById(invoice.InvoiceCode);
-            //data bind the invoices for all further queries
-            dtaGrdsInvoices.ItemsSource = _invoices;
+            searchViewModel.Invoices = ja.selectInvoiceById(invoice.InvoiceCode);
         }
 
         private void dateWasChanged(object sender, SelectionChangedEventArgs e) {
             //get the selected date
             string date = datePicker.Text;
             //query the database with the date and put results into an observable array
-            _invoices = ja.selectInvoicesByDate(date);
-            //data bind the invoices for all further queries
-            dtaGrdsInvoices.ItemsSource = _invoices;
+            searchViewModel.Invoices = ja.selectInvoicesByDate(date);
         }
 
         private void totalCostChanged(object sender, SelectionChangedEventArgs e) {
             //get the selected invoice
             Invoice invoice = (Invoice)cbxCriteria3.SelectedItem;
             //query the database with the invoice id and put the results into an observable array
-            _invoices = ja.selectInvoicesByTotal(invoice.InvoiceTotal);
-            //data bind the invoices for all further queries
-            dtaGrdsInvoices.ItemsSource = _invoices;
+            searchViewModel.Invoices = ja.selectInvoicesByTotal(invoice.InvoiceTotal);
         }
     }//end Search Window
 }

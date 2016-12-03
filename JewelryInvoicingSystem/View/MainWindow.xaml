@@ -30,13 +30,14 @@
                   AutoGenerateColumns="False"
                   x:Name="dataGrid" 
                   HorizontalAlignment="Left" 
-                  Margin="23,332,0,0" 
+                  Margin="23,327,0,0" 
                   VerticalAlignment="Top" 
-                  Height="179" 
+                  Height="155" 
                   Width="536">
             <DataGrid.Columns>
                 <DataGridTextColumn Header="Item" IsReadOnly="True" Binding="{Binding Item.ItemName}"/>
-                <DataGridTextColumn Header="Cost" IsReadOnly="True" Binding="{Binding ItemCost}"/>
+                <DataGridTextColumn Header="Cost" IsReadOnly="True" Binding="{Binding Item.ItemCost}"/>
+                <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding Item.ItemDesc}"/>
             </DataGrid.Columns>
         </DataGrid>
 
@@ -61,16 +62,6 @@
                 Height="34"
                 IsEnabled="False" Click="btnCancel_Click"/>
 
-        <Button x:Name="btnInventory" 
-                Content="Update Inventory" 
-                Style="{StaticResource redStyle}" 
-                HorizontalAlignment="Left" 
-                Margin="337,18,0,0" 
-                VerticalAlignment="Top" 
-                Width="222" 
-                Height="40" Click="btnInventory_Click"
-                Visibility="Hidden"/>
-
         <Button x:Name="btnNewInvoice" 
                 Content="Create New Invoice" 
                 Style="{StaticResource grayButtons}" 
@@ -79,22 +70,11 @@
                 VerticalAlignment="Top" 
                 Width="165" Height="34" Click="btnNewInvoice_Click"/>
 
-        <Button x:Name="btnSearchInvoice" 
-                Content="Search Existing Invoices" 
-                Style="{StaticResource grayButtons}" 
-                HorizontalAlignment="Left" 
-                Margin="31,147,0,0" 
-                VerticalAlignment="Top" 
-                Width="165" 
-                Height="34"
-                Visibility="Hidden"
-                Click="btnSearchInvoice_Click"/>
-
         <Button x:Name="btnEditInvoice" 
                 Content="Edit Invoice" 
                 Style="{StaticResource grayButtons}" 
                 HorizontalAlignment="Left" 
-                Margin="31,172,0,0" 
+                Margin="31,198,0,0" 
                 VerticalAlignment="Top" 
                 Width="165" 
                 Height="34" 
@@ -104,7 +84,7 @@
                 Content="Delete Invoice" 
                 Style="{StaticResource grayButtons}" 
                 HorizontalAlignment="Left" 
-                Margin="31,238,0,0" 
+                Margin="31,246,0,0" 
                 VerticalAlignment="Top" 
                 Width="165" 
                 Height="34" 
@@ -128,12 +108,12 @@
                Margin="290,180,0,0" 
                VerticalAlignment="Top"/>
 
-        <ComboBox x:Name="cbxItem" 
+        <ComboBox ItemsSource="{Binding Items}" x:Name="cbxItem" 
                   HorizontalAlignment="Left" 
                   Margin="346,180,0,0" 
                   VerticalAlignment="Top" 
                   Width="120" 
-                  Height="26" SelectionChanged="itemSelected" />
+                  Height="26" />
 
         <Label x:Name="lblCost" 
                Content="Cost:" 
@@ -153,7 +133,7 @@
                 IsEnabled="False" Click="btnAddItem_Click"/>
 
         <Label x:Name="lblInvoice" 
-               Content="" 
+               Content="{Binding Invoice.InvoiceCode}" 
                HorizontalAlignment="Left" 
                Margin="346,99,0,0" 
                VerticalAlignment="Top" 
@@ -161,21 +141,24 @@
                Background="BlanchedAlmond" Height="26" />
 
         <DatePicker x:Name="dtePck" 
+                    Text="{Binding Invoice.InvoiceDate}"
                     HorizontalAlignment="Left" 
                     Margin="346,138,0,0" 
                     VerticalAlignment="Top" 
                     Width="120"
                     IsEnabled="False"/>
 
-        <TextBox x:Name="txtTotalCostCount" 
-               Text="" 
+        <TextBox
+               DataContext="{Binding SelectedItem, ElementName=cbxItem}"
+               Text="{Binding ItemCost}" 
+               x:Name="txtTotalCostCount" 
                HorizontalAlignment="Left" 
                Margin="346,222,0,0" 
                VerticalAlignment="Top"
                Background="BlanchedAlmond" 
                Width="120" 
                Height="26"
-               IsReadOnly="True" TextChanged="txtTotalCostCount_TextChanged"/>
+               IsReadOnly="True"/>
 
         <Button x:Name="btnExit" 
                 Content="EXIT" 
@@ -193,9 +176,9 @@
               Width="296"
             Style="{StaticResource redMenu}">
             <Menu IsMainMenu="True"/>
-            <MenuItem Header="Update Inventory" Click="btnInventory_Click"  />
-            <MenuItem Header="Search Invoices" Click="btnSearchInvoice_Click"/>
-
+                <MenuItem x:Name="btnInventory" Header="Update Inventory" Click="btnInventory_Click"  />
+            <MenuItem x:Name="btnSearchInvoice" Header="Search Invoices" Click="btnSearchInvoice_Click"/>
+            
         </Menu>
         <Button x:Name="btnDeleteitem" 
             Content="Delete Item" Style="{StaticResource grayButtons}" 
@@ -205,20 +188,21 @@
             Width="111" 
             Height="27" 
             IsEnabled="False" Click="btnDeleteItm_Click"/>
-
-        <Label x:Name="lblRunningTotal" 
-               Content="{Binding ItemCost}" 
-               HorizontalAlignment="Left" 
-               Margin="346,301,0,0" 
-               Background="BlanchedAlmond"
-               
-               VerticalAlignment="Top" Width="120" Height="26"/>
-        
-        <Label x:Name="label" 
-               Content="Invoice Total:      $" 
-               HorizontalAlignment="Left" 
-               Margin="237,301,0,0" 
-               VerticalAlignment="Top"/>
+        <Label 
+            x:Name="txtInvoiceTotal" 
+            Content="{Binding Total}" 
+            HorizontalAlignment="Left" 
+            Margin="92,487,0,0" 
+            VerticalAlignment="Top"
+            Background="BlanchedAlmond" 
+            Width="120" 
+            Height="26"
+            />
+        <Label x:Name="lblTotal" 
+            Content="Total:" 
+            HorizontalAlignment="Left" 
+            Margin="51,487,0,0" 
+            VerticalAlignment="Top"/>
 
     </Grid>
 </Window>

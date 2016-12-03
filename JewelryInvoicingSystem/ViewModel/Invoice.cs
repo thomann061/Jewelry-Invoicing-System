@@ -6,7 +6,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JewelryInvoicingSystem.Model {
-    public class Invoice : INotifyPropertyChanged {
+    public class Invoice : ObservableObject {
         /// <summary>
         /// Invoice Identifier
         /// </summary>
@@ -21,26 +21,11 @@ namespace JewelryInvoicingSystem.Model {
         private double _invoiceTotal;
 
         /// <summary>
-        /// Constructor
-        /// </summary>
-        public Invoice() {
-
-        }
-
-        /// <summary>
         /// String representation of an invoice
         /// </summary>
         /// <returns></returns>
         public override string ToString() {
             return InvoiceCode.ToString();
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        protected virtual void OnPropertyChanged(string propertyName) {
-            var handler = PropertyChanged;
-            if (handler != null)
-                handler(this, new PropertyChangedEventArgs(propertyName));
         }
 
         //getters and setters
