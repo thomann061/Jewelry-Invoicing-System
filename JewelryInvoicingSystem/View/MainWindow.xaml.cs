@@ -23,11 +23,22 @@ namespace JewelryInvoicingSystem {
     /// </summary>
     public partial class MainWindow : Window
     {
+        /// <summary>
+        /// Main View Model
+        /// </summary>
+        /// 
         private MainViewModel mainViewModel;
+        /// <summary>
+        /// Jewelry Access variable
+        /// </summary>
         private JewelryAccess ja;
 
+        /// <summary>
+        /// Main view model Property
+        /// </summary>
         public MainViewModel MainViewModel { get; set; }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public MainWindow()
         {
             mainViewModel = new MainViewModel();
@@ -36,8 +47,9 @@ namespace JewelryInvoicingSystem {
             mainViewModel.Items = ja.selectItems(); //populate items box
             InitializeComponent();
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-        
+        #region Methods
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -49,7 +61,7 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                //enable data fields for use
+                //Enable data fields for use
                 btnAddItem.IsEnabled = true;
                 btnDeleteitem.IsEnabled = true;
                 btnNewInvoice.IsEnabled = false;
@@ -67,11 +79,10 @@ namespace JewelryInvoicingSystem {
                 mainViewModel.Invoice = new Invoice();
                 mainViewModel.InvoiceItems.Clear();
 
-                //get next id for an invoice
+                //Get next id for an invoice
                 mainViewModel.Invoice.InvoiceDate = DateTime.Now;
                 mainViewModel.Invoice.InvoiceCode = ja.selectNextInvoiceId();
             }
-
             catch
             {
                MessageBox.Show("Sorry, something went wrong!", "Error", 
@@ -91,21 +102,22 @@ namespace JewelryInvoicingSystem {
             {
                 //create a new InvoiceItem from Item and Cost
                 Item selectedItem = (Item) cbxItem.SelectedItem;
-                if (selectedItem != null) {
+                if (selectedItem != null){
                     InvoiceItem newInvoiceItem = new InvoiceItem();
                     newInvoiceItem.Item = selectedItem;
+
                     //set the InvoiceItem to an observable array
                     mainViewModel.InvoiceItems.Add(newInvoiceItem);
+                    
                     //store in database
                     if (btnEditInvoice.Content.ToString() == "Done Editing") {
                         ja.insertInvoiceItem(newInvoiceItem, mainViewModel.Invoice);
-
                     }
                 }
             }
             catch
             {
-                System.Windows.MessageBox.Show("Sorry, something went wrong!", "Error",
+                MessageBox.Show("Sorry, something went wrong!", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
@@ -122,11 +134,13 @@ namespace JewelryInvoicingSystem {
             {
                 SearchWindow srchWin = new SearchWindow(this);
                 srchWin.ShowDialog();
-                //if the invoice is not null, set it to the current invoice
+
+                //If the invoice is not null, set it to the current invoice
                 if(srchWin.ReturnInvoice != null) {
                     mainViewModel.Invoice = srchWin.ReturnInvoice;
                     mainViewModel.InvoiceItems = ja.selectItemsFromInvoice(srchWin.ReturnInvoice.InvoiceCode);
-                    //enable edit and delete
+                    
+                    //Enable edit and delete
                     btnDeleteInvoice.IsEnabled = true;
                     btnEditInvoice.IsEnabled = true;
                 }
@@ -164,7 +178,8 @@ namespace JewelryInvoicingSystem {
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void DefWindowWasClosed(object sender, EventArgs e) {
+        private void DefWindowWasClosed(object sender, EventArgs e)
+        {
             mainViewModel.Items = ja.selectItems(); //populate items box
         }
 
@@ -179,15 +194,19 @@ namespace JewelryInvoicingSystem {
             try
             {
                 btnNewInvoice.IsEnabled = true;
+                
                 //set the date for the invoice
-                if (dtePck.SelectedDate == null || dataGrid.Items.Count == 1) //dataGrid.Items.Count is always equal to 1
+                if (dtePck.SelectedDate == null || dataGrid.Items.Count == 1) //The data grid looks empty but dataGrid.Items.Count is equal to 1
                     MessageBox.Show("You must enter an invoice date or at least one item.", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
-                else {
+                else
+                {
                     //insert invoice
-                    if (ja.insertInvoice(mainViewModel.Invoice)) {
+                    if (ja.insertInvoice(mainViewModel.Invoice))
+                    {
                         bool result = ja.updateInvoiceWithItems(mainViewModel.Invoice, mainViewModel.InvoiceItems);
-                        if (result) {
-                            //enable data fields for use
+                        if (result)
+                        {
+                            //Enable data fields for use
                             btnAddItem.IsEnabled = false;
                             btnDeleteitem.IsEnabled = false;
                             btnNewInvoice.IsEnabled = true;
@@ -202,7 +221,6 @@ namespace JewelryInvoicingSystem {
                             dataGrid.IsEnabled = false;
                         }
                     }
-                    
                 }
             }
             catch
@@ -236,7 +254,6 @@ namespace JewelryInvoicingSystem {
                 mainViewModel.Invoice = null;
                 mainViewModel.InvoiceItems.Clear();
             }
-
             catch
             {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
@@ -244,73 +261,107 @@ namespace JewelryInvoicingSystem {
             }
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Handler for editing an invoice
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnEditInvoice_Click(object sender, RoutedEventArgs e) {
-            if (btnEditInvoice.Content.ToString() == "Edit Invoice") {
-                //enable data fields for use
-                btnAddItem.IsEnabled = true;
-                btnDeleteInvoice.IsEnabled = false;
-                btnDeleteitem.IsEnabled = true;
-                btnNewInvoice.IsEnabled = false;
-                dtePck.IsEnabled = true;
-                btnCancel.IsEnabled = false;
-                btnSave.IsEnabled = false;
-                txtTotalCostCount.IsEnabled = true;
-                btnSearchInvoice.IsEnabled = false;
-                btnInventory.IsEnabled = false;
-                dataGrid.IsEnabled = true;
-                btnEditInvoice.IsEnabled = true;
-                btnEditInvoice.Content = "Done Editing";
-            } else {
-                btnAddItem.IsEnabled = false;
-                btnDeleteitem.IsEnabled = false;
-                btnNewInvoice.IsEnabled = true;
-                dtePck.IsEnabled = false;
-                btnCancel.IsEnabled = false;
-                btnDeleteInvoice.IsEnabled = true;
-                btnEditInvoice.IsEnabled = true;
-                btnSave.IsEnabled = false;
-                txtTotalCostCount.IsEnabled = false;
-                btnSearchInvoice.IsEnabled = true;
-                btnInventory.IsEnabled = true;
-                dataGrid.IsEnabled = false;
-                btnEditInvoice.Content = "Edit Invoice";
+            try
+            {
+                if (btnEditInvoice.Content.ToString() == "Edit Invoice")
+                {
+                    //enable data fields for use
+                    btnAddItem.IsEnabled = true;
+                    btnDeleteInvoice.IsEnabled = false;
+                    btnDeleteitem.IsEnabled = true;
+                    btnNewInvoice.IsEnabled = false;
+                    dtePck.IsEnabled = true;
+                    btnCancel.IsEnabled = false;
+                    btnSave.IsEnabled = false;
+                    txtTotalCostCount.IsEnabled = true;
+                    btnSearchInvoice.IsEnabled = false;
+                    btnInventory.IsEnabled = false;
+                    dataGrid.IsEnabled = true;
+                    btnEditInvoice.IsEnabled = true;
+                    btnEditInvoice.Content = "Done Editing";
+                }
+                else
+                {
+                    btnAddItem.IsEnabled = false;
+                    btnDeleteitem.IsEnabled = false;
+                    btnNewInvoice.IsEnabled = true;
+                    dtePck.IsEnabled = false;
+                    btnCancel.IsEnabled = false;
+                    btnDeleteInvoice.IsEnabled = true;
+                    btnEditInvoice.IsEnabled = true;
+                    btnSave.IsEnabled = false;
+                    txtTotalCostCount.IsEnabled = false;
+                    btnSearchInvoice.IsEnabled = true;
+                    btnInventory.IsEnabled = true;
+                    dataGrid.IsEnabled = false;
+                    btnEditInvoice.Content = "Edit Invoice";
+                }
             }
-
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Delete an invoice
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
         private void btnDeleteInvoice_Click(object sender, RoutedEventArgs e) {
-            //delete an invoice
-            bool result = ja.deleteInvoice(mainViewModel.Invoice);
-            if(result) {
-                mainViewModel.Invoice = null;
-                mainViewModel.InvoiceItems.Clear();
-                //enable data fields for use
-                btnEditInvoice.IsEnabled = false;
-                btnDeleteInvoice.IsEnabled = false;
+            try
+            {
+                //delete an invoice
+                bool result = ja.deleteInvoice(mainViewModel.Invoice);
+                if (result)
+                {
+                    mainViewModel.Invoice = null;
+                    mainViewModel.InvoiceItems.Clear();
+                    //enable data fields for use
+                    btnEditInvoice.IsEnabled = false;
+                    btnDeleteInvoice.IsEnabled = false;
+                }
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
+        ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
         /// Delete an invoice item
         /// </summary>
         /// <param name="sender"></param>
         /// <param name="e"></param>
-        private void btnDeleteItm_Click(object sender, RoutedEventArgs e) {
-            InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
-            if (selectedItem != null)
-                if (btnEditInvoice.Content.ToString() == "Done Editing")
-                    ja.deleteInvoiceItem(selectedItem);
+        private void btnDeleteItm_Click(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                InvoiceItem selectedItem = (InvoiceItem)dataGrid.SelectedItem;
+                if (selectedItem != null)
+                    if (btnEditInvoice.Content.ToString() == "Done Editing")
+                        ja.deleteInvoiceItem(selectedItem);
                 mainViewModel.InvoiceItems.Remove(selectedItem);
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                  MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
+
+        #endregion
+
     }//end Main Window
 }
