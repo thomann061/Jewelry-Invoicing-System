@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 
 namespace JewelryInvoicingSystem.ViewModel {
-    class MainViewModel : ObservableObject {
+    public class MainViewModel : ObservableObject {
         private ObservableCollection<Item> _items;
         private Invoice _invoice;
         private ObservableCollection<InvoiceItem> _invoiceItems;

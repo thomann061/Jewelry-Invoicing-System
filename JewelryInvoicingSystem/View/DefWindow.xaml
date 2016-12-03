@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:JewelryInvoicingSystem"
         mc:Ignorable="d"
     Title="Inventory" Height="612.149" Width="618.73" WindowStartupLocation="CenterScreen"
-       DataContext="{Binding RelativeSource={RelativeSource Self}}">
+      >
 
     <Grid>
 
@@ -24,16 +24,6 @@
                 <DataGridTextColumn Header="Description" IsReadOnly="True" Binding="{Binding ItemDesc}"/>
             </DataGrid.Columns>
         </DataGrid>
-
-        <Button x:Name="btnClose" 
-                Content="Cancel" 
-                HorizontalAlignment="Left" 
-                Margin="312,515,0,0" 
-                VerticalAlignment="Top" 
-                Width="104" 
-                Height="35" 
-                Style="{StaticResource redStyle}"
-                Click="btnClose_Click"/>
 
         <Button x:Name="btnSaveAndClose" 
                 Content="Close" 

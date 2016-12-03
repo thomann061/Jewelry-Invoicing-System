@@ -44,7 +44,7 @@ namespace JewelryInvoicingSystem.Model {
                     item.ItemCode = int.Parse(ds.Tables[0].Rows[i]["ItemCode"].ToString());
                     item.ItemName = ds.Tables[0].Rows[i]["ItemName"].ToString();
                     item.ItemDesc = ds.Tables[0].Rows[i]["ItemDesc"].ToString();
-                    item.ItemCost = int.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
+                    item.ItemCost = double.Parse(ds.Tables[0].Rows[i]["ItemCost"].ToString());
 
                     col_Items.Add(item);
                 }
@@ -133,7 +133,8 @@ namespace JewelryInvoicingSystem.Model {
 
                 item.ItemCode = int.Parse(ds.Tables[0].Rows[0]["ItemCode"].ToString());
                 item.ItemName = ds.Tables[0].Rows[0]["ItemName"].ToString();
-                item.ItemCost = int.Parse(ds.Tables[0].Rows[0]["ItemCost"].ToString());
+                item.ItemDesc = ds.Tables[0].Rows[0]["ItemDesc"].ToString();
+                item.ItemCost = double.Parse(ds.Tables[0].Rows[0]["ItemCost"].ToString());
 
                 col_Items.Add(item);
             } catch (Exception e) {
@@ -403,8 +404,13 @@ namespace JewelryInvoicingSystem.Model {
         public bool deleteItem(int id) {
             string sSQL;    //Holds an SQL statement
             int rowCount = 0;   //Number of rows Affected
-            sSQL = "DELETE FROM Item WHERE ItemCode = " + id;
+            string iSQL = "SELECT TOP 1 InvoiceItemCode FROM InvoiceItem WHERE ItemCode = " + id + ";";
+            sSQL = "DELETE FROM Item WHERE ItemCode = " + id + ";";
             try {
+                //first check if Item is in use.
+                rowCount = db.ExecuteNonQuery(iSQL);
+                if (rowCount == 0)
+                    return false;
                 rowCount = db.ExecuteNonQuery(sSQL);
                 //if insert unsuccessful
                 if (rowCount == 0)

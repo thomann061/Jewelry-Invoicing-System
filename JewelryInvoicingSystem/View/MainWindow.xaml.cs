@@ -25,7 +25,9 @@ namespace JewelryInvoicingSystem {
     {
         private MainViewModel mainViewModel;
         private JewelryAccess ja;
-        
+
+        public MainViewModel MainViewModel { get; set; }
+
         public MainWindow()
         {
             mainViewModel = new MainViewModel();
@@ -148,6 +150,7 @@ namespace JewelryInvoicingSystem {
             try
             {
                 DefWindow defWin = new DefWindow(this);
+                defWin.Closed += DefWindowWasClosed;
                 defWin.ShowDialog();
             }
             catch
@@ -155,6 +158,15 @@ namespace JewelryInvoicingSystem {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
+        }
+        
+        /// <summary>
+        /// Event handler for when def window closes
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
+        private void DefWindowWasClosed(object sender, EventArgs e) {
+            mainViewModel.Items = ja.selectItems(); //populate items box
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
