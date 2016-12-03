@@ -22,12 +22,32 @@ namespace JewelryInvoicingSystem {
     /// Interaction logic for DefWindow.xaml
     /// </summary>
     public partial class DefWindow : Window {
+        /// <summary>
+        /// Main Window instance
+        /// </summary>
         private MainWindow mainWindow;
+
+        /// <summary>
+        /// defViewModel instance
+        /// </summary>
         private DefViewModel defViewModel;
+
+        /// <summary>
+        /// Jewelry Access instance
+        /// </summary>
         private JewelryAccess ja;
+
+        /// <summary>
+        /// Holds selected item
+        /// </summary>
         private Item selectedItem;
+
+        /// <summary>
+        /// Holds the selected index
+        /// </summary>
         private int selectedIndex;
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public DefWindow(MainWindow mainWindow)
         {
             InitializeComponent();
@@ -39,7 +59,9 @@ namespace JewelryInvoicingSystem {
             //set to the view
             defViewModel.Items = ja.selectItems();
         }
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+        #region Methods
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -52,6 +74,7 @@ namespace JewelryInvoicingSystem {
             try
             {
                 dtaGrdInventory.SelectedItems.Clear();
+
                 //enable/disable fields for use
                 btnAddNew.IsEnabled = false;
                 txtCost.IsEnabled = true;
@@ -62,7 +85,6 @@ namespace JewelryInvoicingSystem {
                 txtItemDescription.Background = Brushes.BlanchedAlmond;
                 txtName.Background = Brushes.BlanchedAlmond;
                 btnCancel.Visibility = Visibility.Visible;
-
                 btnEdit.IsEnabled = false;
                 btnDelete.IsEnabled = false;
             }
@@ -71,9 +93,7 @@ namespace JewelryInvoicingSystem {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            
         }
-
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -85,7 +105,6 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                //Closes the form
                 Close();
             }
             catch
@@ -94,12 +113,6 @@ namespace JewelryInvoicingSystem {
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
-
-
-///////the close and cancel button could probably be put into one button. My idea was the user could click cancel and leave the
-///////window without saving anything. Alternatively, clicking on the close button would close the window while saving the  
-///////information
-
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -147,16 +160,14 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                ///TODO: POPULATE THE NAME, COST, AND DESCRIPTION FIELDS WITH THE ITEM THE USER HAS SELECTED
-                ///TO BE EDITED IN THE DATAGRID
-                
-
-                //get first selected item
+                //Get first selected item
                 selectedItem = (Item) dtaGrdInventory.SelectedItem;
                 selectedIndex = dtaGrdInventory.SelectedIndex;
+
                 //bring text to screen
-                if (selectedItem != null) {
-                    //disable the new and delete item button so ensure editing of current item
+                if (selectedItem != null)
+                {
+                    //Disable the new and delete item button so ensure editing of current item
                     btnAddNew.IsEnabled = false;
                     btnEdit.IsEnabled = false;
                     btnDelete.IsEnabled = false;
@@ -165,13 +176,12 @@ namespace JewelryInvoicingSystem {
                     txtCost.IsEnabled = true;
                     btnSave.IsEnabled = true;
                     btnCancel.Visibility = Visibility.Visible;
-                    //set text to screen
+
+                    //Set text to screen
                     txtName.Text = selectedItem.ItemName;
                     txtItemDescription.Text = selectedItem.ItemDesc;
                     txtCost.Text = selectedItem.ItemCost.ToString();
                 }
-
-
             }
             catch
             {
@@ -191,7 +201,8 @@ namespace JewelryInvoicingSystem {
             try
             {
                 double outs;
-                if (selectedItem != null) {
+                if (selectedItem != null)
+                {
                     selectedItem.ItemName = txtName.Text.ToString();
                     selectedItem.ItemDesc = txtItemDescription.Text.ToString();
                     selectedItem.ItemCost = int.Parse(txtCost.Text.ToString());
@@ -203,10 +214,8 @@ namespace JewelryInvoicingSystem {
                     selectedItem = null;
                 } else if (txtCost.Text != "" || double.TryParse(txtCost.Text, out outs) || txtItemDescription.Text != "" || txtName.Text != "")
                 {
-
                     //Create a new item
                     Item newItem = new Item();
-
 
                     //Extract the text from the text fields and set them equal to a new Item.
                     newItem.ItemName = txtName.Text.ToString();
@@ -216,11 +225,10 @@ namespace JewelryInvoicingSystem {
                     bool result = ja.insertItem(newItem);
                     if (result)
                         defViewModel.Items.Add(newItem);
-
                 }
                 else
                 {
-                    //if there is no data entered
+                    //If there is no data entered
                     MessageBox.Show("Please enter data into the fields", "Error", MessageBoxButton.OK, MessageBoxImage.Hand);
                 }
 
@@ -236,9 +244,14 @@ namespace JewelryInvoicingSystem {
                 MessageBox.Show("Sorry, something went wrong! Please enter appropriate data.", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-           
         }
 
+        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// Deletes an item from the Inventory
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void btnDelete_Click(object sender, RoutedEventArgs e)
         {
             try
@@ -255,7 +268,6 @@ namespace JewelryInvoicingSystem {
                     } else
                         MessageBox.Show("Item is in use! Shame, Shame, Shame!");
                 }
-                
             }
             catch
             {
@@ -263,6 +275,8 @@ namespace JewelryInvoicingSystem {
                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
-      
+
+        #endregion
+
     }//Def Window
 }
