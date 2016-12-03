@@ -30,19 +30,25 @@ namespace JewelryInvoicingSystem {
             set { _returnInvoice = value; }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         public SearchWindow(MainWindow mainWindow)
         {
             InitializeComponent();
             searchViewModel = new SearchViewModel();
             this.DataContext = searchViewModel;
             this.mainWindow = mainWindow;
+
             //load in all invoices to the combobox
             ja = new JewelryAccess();
+
             //select all invoices
             ObservableCollection<Invoice> invoices = ja.selectInvoices();
             searchViewModel.Invoices = invoices;
             searchViewModel.ComboBoxInvoices = invoices;
         }
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+        #region Methods
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -61,7 +67,6 @@ namespace JewelryInvoicingSystem {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
-            
         }
 
         ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -74,11 +79,9 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
-                //TODO: PASS THE DATA BACK TO THE MAIN FORM. WHEN WE PASS THE DATA BACK, WE MUST ALSO DISABLE BUTTONS.
-                //ALL BUTTONS SHOULD BE DISABLED EXCEPT FOR CANCEL, EDIT INVOICE, AND DELETE INVOICE.
                 //get selected invoice
                 ReturnInvoice = (Invoice)dtaGrdsInvoices.SelectedItem; //set the as the invoice to be returned
-                this.Close();
+                Close();
             }
             catch
             {
@@ -87,25 +90,72 @@ namespace JewelryInvoicingSystem {
             }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// When selection change of the invoice number occurs in the search window, the data is queried and displayed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void cbxSelectionChanged(object sender, SelectionChangedEventArgs e) {
-            //get the selected invoice
-            Invoice invoice = (Invoice)cbxCriteria1.SelectedItem;
-            //query the database with the invoice id and put the results into an observable array
-            searchViewModel.Invoices = ja.selectInvoiceById(invoice.InvoiceCode);
+            try
+            {
+                //get the selected invoice
+                Invoice invoice = (Invoice)cbxCriteria1.SelectedItem;
+
+                //query the database with the invoice id and put the results into an observable array
+                searchViewModel.Invoices = ja.selectInvoiceById(invoice.InvoiceCode);
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                 MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// When selection change of the date occurs in the search window, the data is queried and displayed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void dateWasChanged(object sender, SelectionChangedEventArgs e) {
-            //get the selected date
-            string date = datePicker.Text;
-            //query the database with the date and put results into an observable array
-            searchViewModel.Invoices = ja.selectInvoicesByDate(date);
+            try
+            {
+
+                //get the selected date
+                string date = datePicker.Text;
+
+                //query the database with the date and put results into an observable array
+                searchViewModel.Invoices = ja.selectInvoicesByDate(date);
+            }
+            catch
+            {
+                MessageBox.Show("Sorry, something went wrong!", "Error",
+                 MessageBoxButton.OK, MessageBoxImage.Exclamation);
+            }
         }
 
+        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        /// <summary>
+        /// When selection change of the total cost occurs in the search window, the data is queried and displayed
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void totalCostChanged(object sender, SelectionChangedEventArgs e) {
-            //get the selected invoice
-            Invoice invoice = (Invoice)cbxCriteria3.SelectedItem;
-            //query the database with the invoice id and put the results into an observable array
-            searchViewModel.Invoices = ja.selectInvoicesByTotal(invoice.InvoiceTotal);
+            try
+            {
+                //get the selected invoice
+                Invoice invoice = (Invoice)cbxCriteria3.SelectedItem;
+                //query the database with the invoice id and put the results into an observable array
+                searchViewModel.Invoices = ja.selectInvoicesByTotal(invoice.InvoiceTotal);
+            }
+            catch
+            {
+
+            }
         }
+
+        #endregion
+
     }//end Search Window
 }
