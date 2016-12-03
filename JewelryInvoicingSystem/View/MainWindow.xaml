@@ -8,23 +8,6 @@
         Title="Jewelry Invoicing System" Height="614.785" Width="588.862" WindowStartupLocation="CenterScreen"
          >
 
-    <Window.Resources>
-        <Style x:Key="grayButtons" TargetType="Button">
-            <Setter Property="Background" Value="#898584" />
-            <Setter Property="BorderBrush"  Value="Black"/>
-            <Setter Property="BorderThickness" Value="2"/>
-            <Setter Property="FontSize" Value="14" />
-            <Setter Property="FontWeight" Value="Medium"/>
-        </Style>
-
-        <Style x:Key="redStyle" TargetType="Button" BasedOn="{StaticResource grayButtons}">
-            <Setter Property="Background" Value="#BA0000"/>
-        </Style>
-
-
-    </Window.Resources>
-
-
     <Grid Margin="0,0,-6.667,0.333">
         <DataGrid ItemsSource="{Binding InvoiceItems}"
                   AutoGenerateColumns="False"
@@ -45,7 +28,7 @@
                 Content="Save" 
                 Style="{StaticResource grayButtons}" 
                 HorizontalAlignment="Left" 
-                Margin="441,532,0,0" 
+                Margin="467,532,0,0" 
                 VerticalAlignment="Top" 
                 Width="89" 
                 Height="34"
@@ -56,7 +39,7 @@
                 Content="Cancel"
                 Style="{StaticResource redStyle}"
                 HorizontalAlignment="Left" 
-                Margin="324,532,0,0" 
+                Margin="346,532,0,0" 
                 VerticalAlignment="Top" 
                 Width="89" 
                 Height="34"
@@ -160,14 +143,6 @@
                Height="26"
                IsReadOnly="True"/>
 
-        <Button x:Name="btnExit" 
-                Content="EXIT" 
-                Style="{StaticResource redStyle}"
-                HorizontalAlignment="Left" 
-                Margin="31,532,0,0" 
-                VerticalAlignment="Top" 
-                Width="130" 
-                Height="34" Click="btnExit_Click"/>
 
         <Menu x:Name="menu" 
               HorizontalAlignment="Left" 
@@ -176,9 +151,9 @@
               Width="296"
             Style="{StaticResource redMenu}">
             <Menu IsMainMenu="True"/>
-                <MenuItem x:Name="btnInventory" Header="Update Inventory" Click="btnInventory_Click"  />
+            <MenuItem x:Name="btnInventory" Header="Update Inventory" Click="btnInventory_Click"  />
             <MenuItem x:Name="btnSearchInvoice" Header="Search Invoices" Click="btnSearchInvoice_Click"/>
-            
+
         </Menu>
         <Button x:Name="btnDeleteitem" 
             Content="Delete Item" Style="{StaticResource grayButtons}" 
@@ -192,17 +167,18 @@
             x:Name="txtInvoiceTotal" 
             Content="{Binding Total}" 
             HorizontalAlignment="Left" 
-            Margin="92,487,0,0" 
+            Margin="147,509,0,0" 
             VerticalAlignment="Top"
-            Background="BlanchedAlmond" 
             Width="120" 
-            Height="26"
+            Height="34"
+            Style="{StaticResource TotalText}"
             />
         <Label x:Name="lblTotal" 
-            Content="Total:" 
+            Content="Invoice Total  $" 
             HorizontalAlignment="Left" 
-            Margin="51,487,0,0" 
-            VerticalAlignment="Top"/>
+            Margin="23,509,0,0" 
+            VerticalAlignment="Top"
+               Style="{StaticResource LabelText}"/>
 
     </Grid>
 </Window>

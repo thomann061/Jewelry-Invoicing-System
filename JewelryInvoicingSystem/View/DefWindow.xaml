@@ -114,7 +114,7 @@
                 />
 
         <Button x:Name="btnSave" 
-                Content="Save and Stay" 
+                Content="Save" 
                 HorizontalAlignment="Left" 
                 Margin="464,228,0,0" 
                 VerticalAlignment="Top" 

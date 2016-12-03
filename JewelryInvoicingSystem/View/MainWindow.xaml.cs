@@ -62,7 +62,6 @@ namespace JewelryInvoicingSystem {
                 btnSearchInvoice.IsEnabled = false;
                 btnInventory.IsEnabled = false;
                 dataGrid.IsEnabled = true;
-                btnExit.IsEnabled = false;
 
                 //Default Constructors
                 mainViewModel.Invoice = new Invoice();
@@ -181,7 +180,7 @@ namespace JewelryInvoicingSystem {
             {
                 btnNewInvoice.IsEnabled = true;
                 //set the date for the invoice
-                if (dtePck.SelectedDate == null || dataGrid.Items.Count == 0)
+                if (dtePck.SelectedDate == null || dataGrid.Items.Count == 1) //dataGrid.Items.Count is always equal to 1
                     MessageBox.Show("You must enter an invoice date or at least one item.", "Error", MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 else {
                     //insert invoice
@@ -242,25 +241,6 @@ namespace JewelryInvoicingSystem {
             {
                 MessageBox.Show("Sorry, something went wrong!", "Error",
                      MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-        }
-
-        ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Closes the window and exits the program
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnExit_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Close();
-            }   
-            catch
-            {
-                MessageBox.Show("Sorry, something went wrong!", "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Exclamation);
             }
         }
 
