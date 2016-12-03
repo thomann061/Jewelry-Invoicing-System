@@ -36,8 +36,6 @@ namespace JewelryInvoicingSystem {
             this.mainWindow = mainWindow;
             ja = new JewelryAccess();
 
-            //select all invoices
-            defViewModel.Items = new ObservableCollection<Item>();
             //set to the view
             defViewModel.Items = ja.selectItems();
         }
@@ -53,12 +51,12 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
+                dtaGrdInventory.SelectedItems.Clear();
                 //enable/disable fields for use
+                btnAddNew.IsEnabled = false;
                 txtCost.IsEnabled = true;
                 txtName.IsEnabled = true;
                 txtItemDescription.IsEnabled = true;
-                btnSave.IsEnabled = true;
-                btnClose.IsEnabled = true;
                 btnSave.IsEnabled = true;
                 txtCost.Background = Brushes.BlanchedAlmond;
                 txtItemDescription.Background = Brushes.BlanchedAlmond;
@@ -89,7 +87,6 @@ namespace JewelryInvoicingSystem {
             {
                 //Closes the form
                 Close();
-
             }
             catch
             {
@@ -103,25 +100,6 @@ namespace JewelryInvoicingSystem {
 ///////window without saving anything. Alternatively, clicking on the close button would close the window while saving the  
 ///////information
 
-
-        //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-        /// <summary>
-        /// Closes the Window
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void btnClose_Click(object sender, RoutedEventArgs e)
-        {
-            try
-            {
-                Close();
-            }
-            catch
-            {
-                MessageBox.Show("Sorry, something went wrong!", "Error",
-                   MessageBoxButton.OK, MessageBoxImage.Exclamation);
-            }
-        }
 
         //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
         /// <summary>
@@ -139,6 +117,7 @@ namespace JewelryInvoicingSystem {
                 txtItemDescription.IsEnabled = false;
 
                 //enable action buttons
+                btnSave.IsEnabled = false;
                 btnAddNew.IsEnabled = 
                 btnDelete.IsEnabled = 
                 btnEdit.IsEnabled = true;
@@ -173,12 +152,13 @@ namespace JewelryInvoicingSystem {
                 
 
                 //get first selected item
-                selectedItem = (Item) dtaGrdInventory.SelectedItems[0];
+                selectedItem = (Item) dtaGrdInventory.SelectedItem;
                 selectedIndex = dtaGrdInventory.SelectedIndex;
                 //bring text to screen
                 if (selectedItem != null) {
                     //disable the new and delete item button so ensure editing of current item
                     btnAddNew.IsEnabled = false;
+                    btnEdit.IsEnabled = false;
                     btnDelete.IsEnabled = false;
                     txtName.IsEnabled = true;
                     txtItemDescription.IsEnabled = true;
@@ -210,6 +190,7 @@ namespace JewelryInvoicingSystem {
         {
             try
             {
+                double outs;
                 if (selectedItem != null) {
                     selectedItem.ItemName = txtName.Text.ToString();
                     selectedItem.ItemDesc = txtItemDescription.Text.ToString();
@@ -220,7 +201,7 @@ namespace JewelryInvoicingSystem {
                     }
                     ja.updateItem(selectedItem); //update in database
                     selectedItem = null;
-                } else if (txtCost.Text != "" || txtItemDescription.Text != "" || txtName.Text != "")
+                } else if (txtCost.Text != "" || double.TryParse(txtCost.Text, out outs) || txtItemDescription.Text != "" || txtName.Text != "")
                 {
 
                     //Create a new item
@@ -230,15 +211,11 @@ namespace JewelryInvoicingSystem {
                     //Extract the text from the text fields and set them equal to a new Item.
                     newItem.ItemName = txtName.Text.ToString();
                     newItem.ItemDesc = txtItemDescription.Text.ToString();
-                    newItem.ItemCost = int.Parse(txtCost.Text.ToString());
+                    newItem.ItemCost = double.Parse(txtCost.Text.ToString());
 
                     bool result = ja.insertItem(newItem);
-                    if(result)
+                    if (result)
                         defViewModel.Items.Add(newItem);
-                    //set the InvoiceItem to an observable array
-
-                    //data bind it
-                    //dtaGrdInventory.ItemsSource = Items;
 
                 }
                 else
@@ -267,16 +244,18 @@ namespace JewelryInvoicingSystem {
             try
             {
                 //get first selected item
-                selectedItem = (Item)dtaGrdInventory.SelectedItems[0];
+                selectedItem = (Item)dtaGrdInventory.SelectedItem;
                 selectedIndex = dtaGrdInventory.SelectedIndex;
+                if(selectedItem != null) {
+                    int itemId = selectedItem.ItemCode;
 
-                int itemId = selectedItem.ItemCode;
-
-                bool result = ja.deleteItem(itemId);
-                if (result)
-                {
-                    defViewModel.Items.RemoveAt(selectedIndex);
+                    bool result = ja.deleteItem(itemId);
+                    if (result) {
+                        defViewModel.Items.RemoveAt(selectedIndex);
+                    } else
+                        MessageBox.Show("Item is in use! Shame, Shame, Shame!");
                 }
+                
             }
             catch
             {
