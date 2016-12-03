@@ -21,7 +21,7 @@ namespace JewelryInvoicingSystem.Model {
             db = new DataAccess();
         }
 
-        //Select Statements
+        #region Select Statements
 
         /// <summary>
         /// SQL Statement that selects all items
@@ -263,9 +263,9 @@ namespace JewelryInvoicingSystem.Model {
             return col_Items;
         }
 
-        //End Select Statements
+        #endregion
 
-        //Insert Statements
+        #region Insert Statements
 
         /// <summary>
         /// SQL Statement that inserts an item
@@ -309,9 +309,9 @@ namespace JewelryInvoicingSystem.Model {
             return true;
         }
 
-        //End Insert Statements
+        #endregion
 
-        //Update Statements
+        #region Update Statements
 
         /// <summary>
         /// SQL Statement that updates an item
@@ -393,9 +393,9 @@ namespace JewelryInvoicingSystem.Model {
             return true;
         }
 
-        //End Update Statements
+        #endregion
 
-        //Delete Statements
+        #region Delete Statements
 
         /// <summary>
         /// SQL Statement that deletes an item
@@ -464,6 +464,6 @@ namespace JewelryInvoicingSystem.Model {
             return true;
         }
 
-        //End Delete Statements
+        #endregion
     }
 }
