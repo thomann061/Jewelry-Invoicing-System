@@ -71,45 +71,49 @@
                 VerticalAlignment="Top" 
                 Width="165" 
                 Height="34" 
-                IsEnabled="False" Click="btnDeleteInvoice_Click"/>
+                IsEnabled="False" 
+                Click="btnDeleteInvoice_Click"/>
 
         <Label x:Name="lblInvoiceNum" 
                Content="Invoice #:" 
                HorizontalAlignment="Left" 
-               Margin="273,62,0,0" 
-               VerticalAlignment="Top" Height="30" Width="75"/>
+               Margin="271,69,0,0" 
+               Style="{StaticResource LabelText}"
+               VerticalAlignment="Top" Height="28" Width="75"/>
 
         <Label x:Name="lblDate" 
                Content="Date:" 
                HorizontalAlignment="Left" 
-               Margin="302,107,0,0" 
-               VerticalAlignment="Top" Height="29" Width="47"/>
+               Margin="302,112,0,0" 
+               Style="{StaticResource LabelText}"
+               VerticalAlignment="Top" Height="28" Width="47"/>
 
         <Label x:Name="lblItem" 
                Content="Item:" 
                HorizontalAlignment="Left" 
-               Margin="300,154,0,0" 
-               VerticalAlignment="Top" Height="31" Width="46"/>
+               Margin="300,157,0,0" 
+               Style="{StaticResource LabelText}"
+               VerticalAlignment="Top" Height="30" Width="46"/>
 
         <ComboBox ItemsSource="{Binding Items}" x:Name="cbxItem" 
                   HorizontalAlignment="Left" 
-                  Margin="370,154,0,0" 
+                  Margin="370,157,0,0" 
                   VerticalAlignment="Top" 
                   Width="148" 
-                  Height="30" />
+                  Height="29" />
 
         <Label x:Name="lblCost" 
-               Content="Cost:" 
+               Content="Cost    $" 
                HorizontalAlignment="Left" 
-               Margin="302,202,0,0" 
-               VerticalAlignment="Top" Height="29" Width="44"/>
-
-
+               Margin="302,203,0,0" 
+               Style="{StaticResource LabelText}"
+               VerticalAlignment="Top" Height="28" Width="68"/>
 
         <Button x:Name="btnAddItem" 
-                Content="Add Item" Style="{StaticResource grayButtons}" 
+                Content="Add Item" 
+                Style="{StaticResource grayButtons}" 
                 HorizontalAlignment="Left" 
-                Margin="307,261,0,0" 
+                Margin="308,253,0,0" 
                 VerticalAlignment="Top" 
                 Width="111" 
                 Height="27" 
@@ -118,29 +122,30 @@
         <Label x:Name="lblInvoice" 
                Content="{Binding Invoice.InvoiceCode}" 
                HorizontalAlignment="Left" 
-               Margin="370,62,0,0" 
+               Margin="370,69,0,0" 
                VerticalAlignment="Top" 
                Width="148"
-               Background="BlanchedAlmond" Height="30" />
+               Style="{StaticResource LabelBeigeBackground}"
+               Height="28" />
 
         <DatePicker x:Name="dtePck" 
                     Text="{Binding Invoice.InvoiceDate}"
                     HorizontalAlignment="Left" 
-                    Margin="370,107,0,0" 
+                    Margin="370,112,0,0" 
                     VerticalAlignment="Top" 
                     Width="148"
-                    IsEnabled="False" Height="27"/>
+                    IsEnabled="False" Height="26"/>
 
         <TextBox
                DataContext="{Binding SelectedItem, ElementName=cbxItem}"
                Text="{Binding ItemCost}" 
                x:Name="txtTotalCostCount" 
                HorizontalAlignment="Left" 
-               Margin="370,202,0,0" 
+               Margin="370,203,0,0" 
                VerticalAlignment="Top"
-               Background="BlanchedAlmond" 
                Width="148" 
-               Height="30"
+               Height="29"
+               Style="{StaticResource TextBeigeBackground}"   
                IsReadOnly="True"/>
 
 
@@ -158,7 +163,7 @@
         <Button x:Name="btnDeleteitem" 
             Content="Delete Item" Style="{StaticResource grayButtons}" 
             HorizontalAlignment="Left" 
-            Margin="428,261,0,0" 
+            Margin="429,253,0,0" 
             VerticalAlignment="Top" 
             Width="111" 
             Height="27" 

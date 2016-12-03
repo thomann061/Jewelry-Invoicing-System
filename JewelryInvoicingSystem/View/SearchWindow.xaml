@@ -11,7 +11,8 @@
                Content="Search By:" 
                HorizontalAlignment="Left" 
                Margin="21,28,0,0" 
-               VerticalAlignment="Top"/>
+               VerticalAlignment="Top"
+               Style="{StaticResource LabelText}"/>
 
         <ComboBox ItemsSource="{Binding ComboBoxInvoices}" x:Name="cbxCriteria1" 
                   HorizontalAlignment="Left" 
@@ -70,24 +71,27 @@
                HorizontalAlignment="Left" 
                Margin="112,58,0,0" 
                VerticalAlignment="Top"
-               Width="66" 
-               Height="28"/>
+               Width="150" 
+               Height="28"
+               Style="{StaticResource LabelText}"/>
 
         <Label x:Name="lblDate" 
                Content="Date:" 
                HorizontalAlignment="Left" 
-               Margin="140,108,0,0" 
+               Margin="112,108,0,0" 
                VerticalAlignment="Top" 
-               Width="38" 
-               Height="28"/>
+               Width="150" 
+               Height="28"
+               Style="{StaticResource LabelText}"/>
 
         <Label x:Name="lblTtlCost" 
-               Content="Total Charge:" 
+               Content="Total Charge        $" 
                HorizontalAlignment="Left" 
-               Margin="98,154,0,0" 
+               Margin="112,154,0,0" 
                VerticalAlignment="Top" 
-               Width="80" 
-               Height="27"/>
+               Width="150" 
+               Height="36"
+               Style="{StaticResource LabelText}"/>
 
     </Grid>
 </Window>

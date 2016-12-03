@@ -28,6 +28,12 @@
             <Setter Property="FontWeight" Value="Medium"/>
             <Setter Property="FontSize" Value="14"/>
         </Style>
+        
+        <!--Text style for labels-->
+        <Style x:Key="LabelFont" TargetType="TextBox">
+            <Setter Property="FontFamily" Value="Segoe UI"/>
+            <Setter Property="FontWeight" Value="Medium"/>
+        </Style>
 
         <!--Beige Style for the text fields-->
         <Style x:Key="TextBeigeBackground" TargetType="TextBox">

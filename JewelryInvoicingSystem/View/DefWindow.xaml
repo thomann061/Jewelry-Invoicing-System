@@ -67,24 +67,27 @@
                Content="Item Name:" 
                HorizontalAlignment="Left" 
                Margin="291,43,0,0" 
-               VerticalAlignment="Top"/>
+               VerticalAlignment="Top"
+               Style="{StaticResource LabelText}"/>
 
         <Label x:Name="lblCost" 
                Content="Item Cost:      $" 
                HorizontalAlignment="Left" 
                Margin="291,85,0,0" 
-               VerticalAlignment="Top"/>
+               VerticalAlignment="Top"
+               Style="{StaticResource LabelText}"/>
 
         <Label x:Name="lblDescrip" 
                Content="Item Description:" 
                HorizontalAlignment="Left" 
                Margin="291,129,0,0" 
-               VerticalAlignment="Top"/>
+               VerticalAlignment="Top"
+               Style="{StaticResource LabelText}"/>
 
         <TextBox x:Name="txtName" 
                  HorizontalAlignment="Left" 
                  Height="23" 
-                 Margin="383,46,0,0" 
+                 Margin="414,47,0,0" 
                  TextWrapping="Wrap" 
                  Text="" 
                  VerticalAlignment="Top" 
@@ -94,7 +97,7 @@
         <TextBox x:Name="txtCost" 
                  HorizontalAlignment="Left" 
                  Height="23" 
-                 Margin="383,85,0,0" 
+                 Margin="414,93,0,0" 
                  TextWrapping="Wrap" 
                  Text="" 
                  VerticalAlignment="Top" 
